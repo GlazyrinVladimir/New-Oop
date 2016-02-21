@@ -59,6 +59,10 @@ void WriteData(int outputNumber, ofstream &outputFile, bool errorInputNumber)
 		cout << "Failed to open output.txt for writing" << endl;
 	}
 	outputFile.flush();
+	if (!outputFile.is_open())
+	{
+		cout << "outputFile closed" << endl;
+	}
 }
 
 void OutputAndTransformToNewnumber(int inputNumber, ofstream &outputFile)
