@@ -5,23 +5,20 @@
 #include <cassert>
 #include <cstdint>
 #include <winsock.h>
-#include <cstring>
 #include <stdio.h>
-#include <conio.h>
-#include <locale.h>
 
 using namespace std;
 
 void TransferToAnotherNumberSystem(int number, int methodOfByte[8])
 {
 	int countOfByte = 7;
-		while (number != 1)
-		{
-			methodOfByte[countOfByte] = number % 2;
-			countOfByte--;
-			number = number / 2;
-		}
-		methodOfByte[countOfByte] = number;
+	while (number != 1)
+	{
+		methodOfByte[countOfByte] = number % 2;
+		countOfByte--;
+		number = number / 2;
+	}
+	methodOfByte[countOfByte] = number;
 }
 
 void CountTheNumber(int methodOfByte[8], int &outputNumber)
@@ -95,12 +92,12 @@ int main(int argc, char * argv[])
 
 	if (argc <= 2)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы. Формат командной строки flipbyte.exe outputFile <входной байт> \n");
+		printf("ERROR! Usage: flipbyte.exe outputFile <inputByte> \n");
 		return 1;
 	}
 	else if (argc > 3)
 	{
-		printf("Ошибка! Слишком много аргументов для работы программы. Формат командной строки flipbyte.exe outputFile <входной байт> \n");
+		printf("ERROR! Usage: flipbyte.exe outputFile <inputByte> \n");
 		return 1;
 	}
 
@@ -108,5 +105,5 @@ int main(int argc, char * argv[])
 	inputNumber = atoi(argv[2]);
 
 	OutputAndTransformToNewnumber(inputNumber, outputFile);
-	return 1;
+	return 0;
 }

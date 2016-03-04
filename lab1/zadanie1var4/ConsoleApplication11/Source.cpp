@@ -1,45 +1,49 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <vector>
+#include <algorithm>
 #include <string>
-#include <cassert>
-#include <cstdint>
-#include <winsock.h>
-#include <cstring>
-#include <stdio.h>
-#include <conio.h>
-#include <locale.h>
 
 using namespace std;
 
-void SearchAndReplaceSubStrWithOutputLine(string line, const string subStrForChange, const string subStrForSearch, ofstream &outputFile)
+void SearchAndReplaceSubStrWithOutputLine(string &line, const string &subStrForChange, const string &subStrForSearch, ofstream &outputFile)
 {
-	for (size_t i = 0; i <= line.length();)
+	
+	for (size_t i = 0; i < line.length();)
 	{
-		if (subStrForSearch[0] == line[i] && subStrForSearch == line.substr(i, subStrForSearch.length()))
-		{	
+		if ((line.length() - i) >= (subStrForSearch.length()) && equal(subStrForSearch.begin(), subStrForSearch.end(), line.substr(i, subStrForSearch.length()).begin()))
+		{
 			outputFile << subStrForChange;
-			i += subStrForSearch.length();			
+			i += subStrForSearch.length();
 		}
-		else 
+		else
 		{
 			outputFile << line[i];
 			i++;
-		} 
-		
-	}
-	outputFile << "\n";
+		}
+	}	
 }
 
-void ReadDataFromFileAndChangeSubstr(const string subStrForSearch, const string subStrForChange, ifstream &inputFile, ofstream &outputFile)
+void ReadDataFromFileAndChangeSubstr(const string &subStrForSearch, const string &subStrForChange, ifstream &inputFile, ofstream &outputFile)
 {
 	string line;
+	bool isFirstFileLine = true;
 	
 	if ( inputFile.is_open() && outputFile.is_open())
 	{
 		while (getline(inputFile, line))
 		{
-			SearchAndReplaceSubStrWithOutputLine(line, subStrForChange, subStrForSearch, outputFile);
+			if (isFirstFileLine)
+			{
+				isFirstFileLine = false;
+				SearchAndReplaceSubStrWithOutputLine(line, subStrForChange, subStrForSearch, outputFile);
+			}				
+			else
+			{
+				outputFile << endl;
+				SearchAndReplaceSubStrWithOutputLine(line, subStrForChange, subStrForSearch, outputFile);
+			}
 		}
 	}
 	else
@@ -59,13 +63,13 @@ int main(int argc, char * argv[])
 
 	if ( argc < 5)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы. Параметры командной строки: replace.exe inputFile outputFile searchString replaceString \n");
+		printf("ERROR! Usage: replace.exe inputFile outputFile searchString replaceString \n");
 		return 1;
 	}
 
 	else if ( argc > 5)
 	{
-		printf("Ошибка! Слишком много аргументов для работы программы. Параметры командной строки: replace.exe inputFile outputFile searchString replaceString \n");
+		printf("ERROR! Usage: replace.exe inputFile outputFile searchString replaceString \n");
 		return 1;
 	}
 
@@ -76,5 +80,5 @@ int main(int argc, char * argv[])
 	ofstream outputFile(argv[2]);
 
 	ReadDataFromFileAndChangeSubstr(subStrForSearch, subStrForChange, inputFile, outputFile);
-	return 1;
+	return 0;
 }
