@@ -9,17 +9,18 @@
 #include <stdio.h>
 #include <conio.h>
 #include <locale.h>
+#include <iomanip>
 
 using namespace std;
 
-void SearchDeterminant(double &determinant, double matrix[3][3])
+void SearchDeterminant(double &determinant, const double matrix[3][3])
 {
 	double firstPartOfDeterminant = matrix[0][0] * matrix[1][1] * matrix[2][2] + matrix[2][0] * matrix[0][1] * matrix[1][2] + matrix[1][0] * matrix[2][1] * matrix[0][2];
 	double secondPartOfDeterminant = matrix[2][0] * matrix[1][1] * matrix[0][2] + matrix[0][0] * matrix[2][1] * matrix[1][2] + matrix[1][0] * matrix[0][1] * matrix[2][2];
 	determinant = firstPartOfDeterminant - secondPartOfDeterminant;
 }
 
-void SearchMatrixOfCofactors(double matrix[3][3], double cofactorsMatrix[3][3])
+void SearchMatrixOfCofactors(const double matrix[3][3], double cofactorsMatrix[3][3])
 {
 	cofactorsMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1];
 	cofactorsMatrix[0][1] = -1 * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]);
@@ -47,26 +48,25 @@ void SearchTranspositionMatrix(double cofactorsMatrix[3][3])
 	}
 }
 
-void WriteData(double cofactorsMatrix[3][3], double determinant, ofstream &outputFile)
+void PrintMatrix(const double cofactorsMatrix[3][3], ofstream &outputFile)
 {
-	outputFile << "coefficient of the resulting matrix = " << "1/" << determinant << endl;
-	outputFile << "inverse matrix:" << endl;
+	outputFile << "invert matrix:" << endl;
 	for (int i = 0; i < 3; i++)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			outputFile << cofactorsMatrix[i][j] << " ";
+			outputFile << std::fixed << std::setprecision(3) << cofactorsMatrix[i][j] << " ";
 		}
 		outputFile << endl;
 	}
 	outputFile.flush();
 	if (!outputFile.is_open())
 	{
-		cout << "outputFile closed" << endl;
+		outputFile << "outputFile closed" << endl;
 	}
 }
 
-void multipliedTranspositionMatrixOnDeterminant(double cofactorsMatrix[3][3], double determinant)
+void MultipliedTranspositionMatrixOnDeterminant(double cofactorsMatrix[3][3], const double &determinant)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -77,25 +77,24 @@ void multipliedTranspositionMatrixOnDeterminant(double cofactorsMatrix[3][3], do
 	}
 }
 
-void SearchAndOutputInverseMatrix(double matrix[3][3], ofstream &outputFile)
+bool InvertMatrix(double matrix[3][3], double cofactorsMatrix[3][3])
 {
 	double determinant;
-	double cofactorsMatrix[3][3];
 	SearchDeterminant(determinant, matrix);
 	if (determinant == 0)
 	{
-		cout << "Determinant = 0, inverse matrix not exist" << endl;
+		return false;
 	}
 	else
 	{
 		SearchMatrixOfCofactors(matrix, cofactorsMatrix);
 		SearchTranspositionMatrix(cofactorsMatrix);
-		multipliedTranspositionMatrixOnDeterminant(cofactorsMatrix, determinant);
-		WriteData(cofactorsMatrix, determinant, outputFile);
+		MultipliedTranspositionMatrixOnDeterminant(cofactorsMatrix, determinant);
+		return true;
 	}
 }
 
-void ReadData(double matrix[3][3], ifstream &inputFile)
+bool ReadData(double matrix[3][3], ifstream &inputFile)
 {
 	if (inputFile.is_open())
 	{
@@ -110,7 +109,9 @@ void ReadData(double matrix[3][3], ifstream &inputFile)
 	else
 	{
 		cout << "Failed to open input file for reading" << endl;
+		return false;
 	}
+	return true;
 }
 
 int main(int argc, char * argv[])
@@ -121,21 +122,26 @@ int main(int argc, char * argv[])
 
 	if (argc < 3)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы. Параметры командной строки: inputFile outputFile\n");
+		printf("ERROR! Usage: invert.exe inputFile outputFile\n");
 		return 1;
 	}
-
-	else if (argc > 3)
+	else 
+		if (argc > 3)
 	{
-		printf("Ошибка! Слишком много аргументов для работы программы. Параметры командной строки: inputFile outputFile\n");
+		printf("ERROR! Usage: invert.exe inputFile outputFile\n");
 		return 1;
 	}
 
 	ifstream inputFile(argv[1]);
 	ofstream outputFile(argv[2]);
 
-	ReadData(matrix, inputFile);
-	SearchAndOutputInverseMatrix(matrix, outputFile);
-
-	return 1;
+	if (ReadData(matrix, inputFile))
+	{
+		double cofactorsMatrix[3][3];
+		if (InvertMatrix(matrix, cofactorsMatrix))
+			PrintMatrix(cofactorsMatrix, outputFile);	
+		else 
+			outputFile << "Matrix is singular and can't be inverted" << endl;
+	}
+	return 0;
 }

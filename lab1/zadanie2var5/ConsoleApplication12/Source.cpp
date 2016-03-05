@@ -9,85 +9,27 @@
 
 using namespace std;
 
-void TransferToAnotherNumberSystem(int number, int methodOfByte[8])
+uint8_t FlipByte(uint8_t &byte)
 {
-	int countOfByte = 7;
-	while (number != 1)
-	{
-		methodOfByte[countOfByte] = number % 2;
-		countOfByte--;
-		number = number / 2;
-	}
-	methodOfByte[countOfByte] = number;
-}
+	uint8_t	firstBit = 1;
+	uint8_t lastBit = 128;
+	uint8_t finalByte = 0;
 
-void CountTheNumber(int methodOfByte[8], int &outputNumber)
-{
-	const int scaleOfNotation = 2;
 	for (int i = 0; i < 8; i++)
 	{
-		if (methodOfByte[i] == 1)
-		{
-			outputNumber += int(pow(scaleOfNotation, i));
-		}
+		if (byte & firstBit)
+			finalByte |= lastBit;
+		firstBit = firstBit << 1;
+		lastBit = lastBit >> 1;
 	}
-}
 
-void WriteData(int outputNumber, ofstream &outputFile, bool errorInputNumber)
-{
-	if (outputFile.is_open())
-	{
-		if (errorInputNumber)
-		{
-			outputFile << "error in input" << endl;
-		}
-		else
-		{
-			outputFile << outputNumber << endl;
-		}
-		
-		if (!outputFile)
-		{
-			cout << "An error occurred when writing outputFile" << endl;
-		}
-	}
-	else
-	{
-		cout << "Failed to open output.txt for writing" << endl;
-	}
-	outputFile.flush();
-	if (!outputFile.is_open())
-	{
-		cout << "outputFile closed" << endl;
-	}
-}
+	byte = finalByte;
 
-void OutputAndTransformToNewnumber(int inputNumber, ofstream &outputFile)
-{
-	int methodOfByte[8] = { 0,0,0,0,0,0,0,0 };
-	int outputNumber = 0;
-	bool errorInputNumber = false;
-
-	if (inputNumber > 0 && inputNumber <= 255)
-	{
-		TransferToAnotherNumberSystem(inputNumber, methodOfByte);
-		CountTheNumber(methodOfByte, outputNumber);
-		WriteData(outputNumber, outputFile, errorInputNumber);
-	}
-	else
-	{
-		if (inputNumber != 0)
-		{
-			errorInputNumber = true;
-		}
-		WriteData(outputNumber, outputFile, errorInputNumber);
-	}
+	return byte;
 }
 
 int main(int argc, char * argv[])
 {
-	int inputNumber;
-
 	setlocale(LC_ALL, "");
 
 	if (argc <= 2)
@@ -102,8 +44,14 @@ int main(int argc, char * argv[])
 	}
 
 	ofstream outputFile(argv[1]);
-	inputNumber = atoi(argv[2]);
+	int inputNumber = atoi(argv[2]);
 
-	OutputAndTransformToNewnumber(inputNumber, outputFile);
+	if (inputNumber > 0 && inputNumber < 256)
+	{
+		uint8_t byte = inputNumber;
+		outputFile << int(FlipByte(byte));
+	}
+	else outputFile << "ERROR! Not correct number, number range 0-255";
+
 	return 0;
 }

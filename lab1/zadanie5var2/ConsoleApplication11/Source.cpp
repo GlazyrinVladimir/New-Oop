@@ -13,12 +13,11 @@
 
 using namespace std;
 
-void WriteLabirinth(ofstream &outputFile, int matrixOfLabirinth[100][100], int maxWidth, int length, vector <int> coordination)
+void WriteLabirinth(ofstream &outputFile, int matrixOfLabirinth[100][100], int width, int length, vector <int> coordination)
 {
-	
 	for (int i = 0; i < length; i++)
 	{
-		for (int j = 0; j < maxWidth; j++)
+		for (int j = 0; j < width; j++)
 		{
 			if (matrixOfLabirinth[i][j] == -1)
 				outputFile << "#";
@@ -33,7 +32,6 @@ void WriteLabirinth(ofstream &outputFile, int matrixOfLabirinth[100][100], int m
 							outputFile << "-";
 						else 
 							outputFile << " ";
-		
 		}
 		outputFile << "\n";
 	}
@@ -73,18 +71,16 @@ void ReadLabirinth(ifstream &inputFile, int matrixOfLabirinth[100][100], int &ma
 	}
 }
 
-void SearchExitFromLabirinth(int matrix[100][100], int maxWidth, int length, vector <int> coordination)
+void SearchExitFromLabirinth(int matrix[100][100], const int &width, const int &length, vector <int> coordination)
 {
 	matrix[coordination[0]][coordination[1]] = 1;
-	int number = 0;
 	bool doOneMoreIteration = true;
 	while (doOneMoreIteration)
 	{
 		doOneMoreIteration = false;
-		number += 1;
 		for (int i = 0; i < length; i++)
 		{
-			for (int j = 0; j < maxWidth - 1; j++)
+			for (int j = 0; j < width - 1; j++)
 			{
 				if (matrix[i][j] > 0)
 				{
@@ -147,15 +143,15 @@ void RenderingOutputPath(int matrix[100][100], vector <int> coordination)
 void StartProgram(ifstream &inputFile, ofstream &outputFile)
 {
 	int matrixOfLabirinth[100][100];
-	int maxWidth = 0;
+	int width = 0;
 	int length = 0;
 	vector <int> coordination(4);
 	if (inputFile.is_open() && outputFile.is_open())
 	{
-		ReadLabirinth(inputFile, matrixOfLabirinth, maxWidth, length, coordination);
-		SearchExitFromLabirinth(matrixOfLabirinth, maxWidth, length, coordination);
+		ReadLabirinth(inputFile, matrixOfLabirinth, width, length, coordination);
+		SearchExitFromLabirinth(matrixOfLabirinth, width, length, coordination);
 		RenderingOutputPath(matrixOfLabirinth, coordination);
-		WriteLabirinth(outputFile, matrixOfLabirinth, maxWidth, length, coordination);
+		WriteLabirinth(outputFile, matrixOfLabirinth, width, length, coordination);
 	}
 	else
 	{
@@ -169,19 +165,20 @@ int main(int argc, char * argv[])
 
 	if ( argc < 3)
 	{
-		printf("Ошибка! Не хватает аргументов для работы программы. Параметры командной строки: labirinth.exe inputFile outputFile \n");
-		return 1;
+		printf("ERROR! Usage: labirinth.exe inputFile outputFile \n");
+		return 0;
 	}
 
 	else if ( argc > 3)
 	{
-		printf("Ошибка! Слишком много аргументов для работы программы. Параметры командной строки: labirinth.exe inputFile outputFile \n");
-		return 1;
+		printf("ERROR! Usage: labirinth.exe inputFile outputFile \n");
+		return 0;
 	}
 
 	ifstream inputFile(argv[1]);
 	ofstream outputFile(argv[2]);
 	
 	StartProgram(inputFile, outputFile);
-	return 1;
+
+	return 0;
 }
