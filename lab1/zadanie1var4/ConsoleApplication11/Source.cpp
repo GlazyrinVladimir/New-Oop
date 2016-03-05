@@ -9,7 +9,6 @@ using namespace std;
 
 void SearchAndReplaceSubStrWithOutputLine(string &line, const string &subStrForChange, const string &subStrForSearch, ofstream &outputFile)
 {
-	
 	for (size_t i = 0; i < line.length();)
 	{
 		if ((line.length() - i) >= (subStrForSearch.length()) && equal(subStrForSearch.begin(), subStrForSearch.end(), line.substr(i, subStrForSearch.length()).begin()))
