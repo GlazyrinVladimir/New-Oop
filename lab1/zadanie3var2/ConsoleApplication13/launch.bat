@@ -30,6 +30,11 @@ echo 7
 %program% input6.txt
 if ERRORLEVEL 1 goto testFailed
 
+echo 8
+%program% input7.txt
+if ERRORLEVEL 1 goto testFailed
+
+
 echo OK
 exit /B
 

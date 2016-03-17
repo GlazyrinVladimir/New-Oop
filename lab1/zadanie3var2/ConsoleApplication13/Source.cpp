@@ -13,24 +13,24 @@
 
 using namespace std;
 
-void SearchDeterminant(double &determinant, const double matrix[3][3])
+void SearchDeterminant(double &determinant, double const matrix[3][3])
 {
 	double firstPartOfDeterminant = matrix[0][0] * matrix[1][1] * matrix[2][2] + matrix[2][0] * matrix[0][1] * matrix[1][2] + matrix[1][0] * matrix[2][1] * matrix[0][2];
 	double secondPartOfDeterminant = matrix[2][0] * matrix[1][1] * matrix[0][2] + matrix[0][0] * matrix[2][1] * matrix[1][2] + matrix[1][0] * matrix[0][1] * matrix[2][2];
 	determinant = firstPartOfDeterminant - secondPartOfDeterminant;
 }
 
-void SearchMatrixOfCofactors(const double matrix[3][3], double cofactorsMatrix[3][3])
+void SearchMatrixOfCofactors(double const matrix[3][3], double cofactorsMatrix[3][3])
 {
-	cofactorsMatrix[0][0] = matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1];
-	cofactorsMatrix[0][1] = -1 * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]);
-	cofactorsMatrix[0][2] = matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0];
-	cofactorsMatrix[1][0] = -1 * (matrix[0][1] * matrix[2][2] - matrix[0][2] * matrix[2][1]);
-	cofactorsMatrix[1][1] = matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0];
-	cofactorsMatrix[1][2] = -1 * (matrix[0][0] * matrix[2][1] - matrix[0][1] * matrix[2][0]);
-	cofactorsMatrix[2][0] = matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1];
-	cofactorsMatrix[2][1] = -1 * (matrix[0][0] * matrix[1][2] - matrix[0][2] * matrix[1][0]);
-	cofactorsMatrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+	cofactorsMatrix[0][0] = (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]);
+	cofactorsMatrix[0][1] = (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) * (-1);
+	cofactorsMatrix[0][2] = (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0]);
+	cofactorsMatrix[1][0] = (matrix[0][1] * matrix[2][2] - matrix[0][2] * matrix[2][1]) * (-1);
+	cofactorsMatrix[1][1] = (matrix[0][0] * matrix[2][2] - matrix[0][2] * matrix[2][0]);
+	cofactorsMatrix[1][2] = (matrix[0][0] * matrix[2][1] - matrix[0][1] * matrix[2][0]) * (-1);
+	cofactorsMatrix[2][0] = (matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1]);
+	cofactorsMatrix[2][1] = (matrix[0][0] * matrix[1][2] - matrix[0][2] * matrix[1][0]) * (-1);
+	cofactorsMatrix[2][2] = (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]);
 }
 
 void SearchTranspositionMatrix(double cofactorsMatrix[3][3])
@@ -48,7 +48,7 @@ void SearchTranspositionMatrix(double cofactorsMatrix[3][3])
 	}
 }
 
-void PrintMatrix(const double cofactorsMatrix[3][3], ofstream &outputFile)
+void PrintMatrix(double const cofactorsMatrix[3][3], ofstream &outputFile)
 {
 	outputFile << "invert matrix:" << endl;
 	for (int i = 0; i < 3; i++)
@@ -59,14 +59,9 @@ void PrintMatrix(const double cofactorsMatrix[3][3], ofstream &outputFile)
 		}
 		outputFile << endl;
 	}
-	outputFile.flush();
-	if (!outputFile.is_open())
-	{
-		outputFile << "outputFile closed" << endl;
-	}
 }
 
-void MultipliedTranspositionMatrixOnDeterminant(double cofactorsMatrix[3][3], const double &determinant)
+void MultipliedTranspositionMatrixOnDeterminant(double cofactorsMatrix[3][3], double const &determinant)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -77,7 +72,7 @@ void MultipliedTranspositionMatrixOnDeterminant(double cofactorsMatrix[3][3], co
 	}
 }
 
-bool InvertMatrix(double matrix[3][3], double cofactorsMatrix[3][3])
+bool InvertMatrix(double const matrix[3][3], double cofactorsMatrix[3][3])
 {
 	double determinant;
 	SearchDeterminant(determinant, matrix);
@@ -118,8 +113,6 @@ int main(int argc, char * argv[])
 {
 	setlocale(LC_ALL, "");
 
-	double matrix[3][3];
-
 	if (argc < 3)
 	{
 		printf("ERROR! Usage: invert.exe inputFile outputFile\n");
@@ -127,21 +120,26 @@ int main(int argc, char * argv[])
 	}
 	else 
 		if (argc > 3)
-	{
-		printf("ERROR! Usage: invert.exe inputFile outputFile\n");
-		return 1;
-	}
+		{
+			printf("ERROR! Usage: invert.exe inputFile outputFile\n");
+			return 1;
+		}
 
 	ifstream inputFile(argv[1]);
 	ofstream outputFile(argv[2]);
 
+	double matrix[3][3];
+
 	if (ReadData(matrix, inputFile))
 	{
 		double cofactorsMatrix[3][3];
+
 		if (InvertMatrix(matrix, cofactorsMatrix))
 			PrintMatrix(cofactorsMatrix, outputFile);	
 		else 
 			outputFile << "Matrix is singular and can't be inverted" << endl;
 	}
+	outputFile.flush();
+
 	return 0;
 }
