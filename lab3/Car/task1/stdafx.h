@@ -5,15 +5,13 @@
 
 #pragma once
 
-#include "targetver.h"
-
-#include <stdio.h>
 #include <tchar.h>
-
-#include <vector>
+#include <stdio.h>
 #include <iostream>
-#include <algorithm>
-#include <iterator>
-
+#include <string>
+#include <sstream>
+#include <functional>
+#include <map>
+#include <vector>
 
 // TODO: reference additional headers your program requires here

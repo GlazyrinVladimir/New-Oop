@@ -18,24 +18,30 @@ int _tmain()
 	SetConsoleCP(1251);
 	
 	multimap <string, string> dictionary;
+	string saveWord;
 	string wordToTranslate;
-	string inputFileName = InputDictionaryFromFile(dictionary);
-	ifstream inputFile(inputFileName);
-	ofstream outputFile(inputFileName);
+	string inputFileName;
+	cout << "input file name: ";
+	getline(cin, inputFileName);
+
+	InputDictionaryFromFile(dictionary, inputFileName);
 	
 	while (wordToTranslate != "...")
-	{
-		if (!isHaveTranslate(dictionary, wordToTranslate))
+	{	
+		wordToTranslate = GetWordToTranslate();
+		if (!IsHaveTranslate(dictionary, wordToTranslate) && wordToTranslate != "...")
 		{
 			SavingNewWordTranslation(dictionary, wordToTranslate);
 		}
 	}
-
-	for (auto it = dictionary.begin(); it != dictionary.end(); ++it)
+	
+	while (saveWord != "y" && saveWord != "n")
 	{
-		outputFile << it->first << " " << it->second << endl;
+		cout << "do you want to save dictionary? y/n:";
+		getline(cin, saveWord);
+		if (saveWord == "y")
+			SaveDictionaryInFile(dictionary, inputFileName);
 	}
-
 	return 0;
 }
 

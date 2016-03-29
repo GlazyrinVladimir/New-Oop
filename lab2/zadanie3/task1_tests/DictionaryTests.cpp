@@ -11,14 +11,15 @@ bool StringsAreEqual(string const x, string const y)
 BOOST_AUTO_TEST_SUITE(ProcessVector_function)
 
 	// Создает пустой вектор из пустого вектора
-	BOOST_AUTO_TEST_CASE(makes_empty_string_from_empty_string)
+	BOOST_AUTO_TEST_CASE(makes_empty_dictionary)
 	{
-		string emptyString;
+		multimap <string, string> dictionary;
+		
 		StringHtmlDecode(emptyString);
 		BOOST_CHECK(emptyString.empty()); 
 	}
 
-	BOOST_AUTO_TEST_CASE(processing_a_string_without_word_for_change)
+/*	BOOST_AUTO_TEST_CASE(processing_a_string_without_word_for_change)
 	{
 		string line = "&quot &lt";
 		string result = StringHtmlDecode(line);
@@ -40,7 +41,7 @@ BOOST_AUTO_TEST_SUITE(ProcessVector_function)
 		string rightLine = "\" privet ' :) < qwerty &gt&";
 		string result = StringHtmlDecode(line);
 		BOOST_CHECK(StringsAreEqual(rightLine, result));
-	}
+	}*/
 
 BOOST_AUTO_TEST_SUITE_END()
 

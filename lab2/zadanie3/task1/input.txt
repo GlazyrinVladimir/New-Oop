@@ -1,3 +1,11 @@
-mother мама
-father папа
+brother брат
 chair стул
+cheese сыр
+cherry вишня
+cherry вишенка
+father папа
+mother мама
+new новый
+sister сестра
+sofa диван
+table стол

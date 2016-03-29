@@ -15,6 +15,10 @@
 
 using namespace std;
 
-bool isHaveTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
-string InputDictionaryFromFile(multimap <string, string> &dictionary);
+string GetWordToTranslate();
+void SaveDictionaryInFile(multimap <string, string> const dictionary, string inputFileName);
+bool IsHaveRusTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
+bool IsHaveEngTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
+bool IsHaveTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
+void InputDictionaryFromFile(multimap <string, string> &dictionary, string inputFileName);
 void SavingNewWordTranslation(multimap <string, string> &dictionary, string wordToTranslate);

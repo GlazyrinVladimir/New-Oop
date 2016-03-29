@@ -24,7 +24,10 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\task1\HtmlDecode.h">
+    <ClInclude Include="Car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CarSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,13 +35,13 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="task1_tests.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\task1\HtmlDecode.cpp">
+    <ClCompile Include="Car.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HtmlDecodeTests.cpp">
+    <ClCompile Include="CarSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
