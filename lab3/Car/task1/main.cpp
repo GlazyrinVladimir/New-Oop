@@ -7,14 +7,14 @@
 #include <string>
 #include <map>
 #include <fstream>
-#include "Car.h"
+#include "CarControl.h"
 
 using namespace std;
 
 int _tmain()
 {
 
-	CCarSet car;
+	CCar car;
 	CCarControl carControl(car, cin, cout);
 
 	while (!cin.eof() && !cin.fail())

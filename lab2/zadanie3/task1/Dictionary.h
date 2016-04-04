@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <numeric>
 #include <functional>
@@ -12,13 +13,27 @@
 #include <boost/algorithm/string.hpp>
 #include <map>
 #include <fstream>
+#include <boost/noncopyable.hpp>
 
 using namespace std;
 
-string GetWordToTranslate();
-void SaveDictionaryInFile(multimap <string, string> const dictionary, string inputFileName);
-bool IsHaveRusTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
-bool IsHaveEngTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
-bool IsHaveTranslate(multimap <string, string> &dictionary, string &wordToTranslate);
-void InputDictionaryFromFile(multimap <string, string> &dictionary, string inputFileName);
-void SavingNewWordTranslation(multimap <string, string> &dictionary, string wordToTranslate);
+class CDictionary : boost::noncopyable
+{
+public:
+	string GetFileName();
+	string GetWordToTranslate();
+	void SaveDictionaryInFile();
+	void DialogBeforeFinishWithUser();
+	void StartWorkWithDictionary();
+	bool IsHaveRusTranslate(string &wordToTranslate);
+	bool IsHaveEngTranslate(string &wordToTranslate);
+	bool IsHaveTranslate(string &wordToTranslate);
+	void InputDictionaryFromFile(ifstream & inputFile);
+	void SavingNewWordTranslation(string wordToTranslate);
+private:
+	std::string m_fileName;
+	multimap <string, string> m_dictionary;
+//private:
+	
+};
+

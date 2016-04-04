@@ -27,7 +27,7 @@
     <ClInclude Include="..\task1\Car.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\task1\CarSet.h">
+    <ClInclude Include="..\task1\CarControl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,7 +44,7 @@
     <ClCompile Include="..\task1\Car.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\task1\CarSet.cpp">
+    <ClCompile Include="..\task1\CarControl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -94,13 +94,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\task1\Car.h" />
-    <ClInclude Include="..\task1\CarSet.h" />
+    <ClInclude Include="..\task1\CarControl.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\task1\Car.cpp" />
-    <ClCompile Include="..\task1\CarSet.cpp" />
+    <ClCompile Include="..\task1\CarControl.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

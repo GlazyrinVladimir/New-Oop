@@ -1,46 +1,30 @@
-﻿#pragma once
-#include <string>
-#include <iostream>
-#include <algorithm>
-#include <numeric>
-#include <functional>
-#include <vector>
-#include <boost/range/algorithm/transform.hpp>
-#pragma warning (push, 3)
-#include <boost/phoenix.hpp>
-#pragma warning (pop)
-#include <boost/algorithm/string.hpp>
-#include <map>
-#include <boost/noncopyable.hpp>
-#include <fstream>
-#include "CarSet.h"
+#pragma once
+#include "stdafx.h"
 
-using namespace std;
+enum MovementType
+{
+	STAY,
+	BACK,
+	FORWARD
+};
 
-
-class CCarControl : boost::noncopyable
+class CCar
 {
 public:
-	CCarControl(CCarSet & m_car, std::istream & input, std::ostream & output);
-	bool HandleCommand();
-	
-private: 
-	bool TurnOnEngine(std::istream & args);
-	bool TurnOffEngine(std::istream & args);
-	bool SetGear(std::istream & args);
-	bool SetSpeed(std::istream & args);
-	bool GetInfo(std::istream & input)const;
+	bool IsTurnedOn()const;
+	bool TurnOn();
+	bool TurnOff();
+	int GetGear()const;
+	bool SelectGear(int gear);
+	int GetSpeed()const;
+	bool SelectSpeed(int speed);
+	MovementType GetMovement()const;
+	bool SetMovement(int const & speed, int const & gear);
 
 private:
-	typedef std::map<std::string, std::function<bool(std::istream & args)>> ActionMap;
+	bool m_isOn = false;
+	int m_currentGear = 0;
+	int m_currentSpeed = 0;
 
-	int m_newSpeed;
-	int m_newGear;
-
-	CCarSet m_car;
-	std::istream & m_input;
-	std::ostream & m_output;
-
-	const ActionMap m_actionMap;
-
+	MovementType m_movement = STAY;
 };

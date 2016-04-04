@@ -3,18 +3,53 @@
 
 using namespace std;
 
-void SaveDictionaryInFile(multimap <string, string> const dictionary, string inputFileName)
+void CDictionary::StartWorkWithDictionary()
 {
-	ofstream outputFile(inputFileName);
-	for (auto it = dictionary.begin(); it != dictionary.end(); ++it)
+	ifstream inputFile(GetFileName());
+	InputDictionaryFromFile(inputFile);
+	string wordToTranslate;
+	while (wordToTranslate != "...")
 	{
-		outputFile << it->first << " " << it->second << endl;
+		wordToTranslate = GetWordToTranslate();
+		if (!IsHaveTranslate(wordToTranslate) && wordToTranslate != "...")
+		{
+			SavingNewWordTranslation(wordToTranslate);
+		}
 	}
 }
 
-string GetWordToTranslate()
+void CDictionary::DialogBeforeFinishWithUser()
 {
-	string word;
+	string AnswerWord;
+
+	while (AnswerWord != "y" && AnswerWord != "n")
+	{
+		cout << "do you want to save dictionary? y/n:";
+		getline(cin, AnswerWord);
+		if (AnswerWord == "y")
+			SaveDictionaryInFile();
+	}
+}
+
+string CDictionary::GetFileName()
+{
+	cout << "input file name: ";
+	getline(cin, m_fileName);
+	return m_fileName;
+}
+
+void CDictionary::SaveDictionaryInFile()
+{
+	ofstream outputFile(m_fileName);
+	for (auto it = m_dictionary.begin(); it != m_dictionary.end(); ++it)
+	{
+		outputFile << it->first << " " << it->second << endl;
+	}
+	outputFile.flush();
+}
+
+string CDictionary::GetWordToTranslate()
+{
 	string wordToTranslate;
 	cout << "input word to translate:";
 	getline(cin, wordToTranslate);
@@ -22,11 +57,11 @@ string GetWordToTranslate()
 	return wordToTranslate;
 }
 
-bool IsHaveEngTranslate(multimap <string, string> &dictionary, string &wordToTranslate)
+bool CDictionary::IsHaveEngTranslate(string &wordToTranslate)
 {
 	bool isTranslated = false;
 
-	for (auto it = dictionary.begin(); it != dictionary.end(); ++it)
+	for (auto it = m_dictionary.begin(); it != m_dictionary.end(); ++it)
 	{
 		if (it->second == wordToTranslate)
 		{
@@ -38,11 +73,11 @@ bool IsHaveEngTranslate(multimap <string, string> &dictionary, string &wordToTra
 	return isTranslated;
 }
 
-bool IsHaveRusTranslate(multimap <string, string> &dictionary, string &wordToTranslate)
+bool CDictionary::IsHaveRusTranslate(string &wordToTranslate)
 {
 	bool isTranslated = false;
 
-	for (auto it = dictionary.begin(); it != dictionary.end(); ++it)
+	for (auto it = m_dictionary.begin(); it != m_dictionary.end(); ++it)
 	{
 		if (it->first == wordToTranslate)
 		{
@@ -54,32 +89,29 @@ bool IsHaveRusTranslate(multimap <string, string> &dictionary, string &wordToTra
 	return isTranslated;
 }
 
-bool IsHaveTranslate(multimap <string, string> &dictionary,string &wordToTranslate)
+bool CDictionary::IsHaveTranslate(string &wordToTranslate)
 {
-	if (IsHaveRusTranslate(dictionary, wordToTranslate)) 
+	if (IsHaveRusTranslate(wordToTranslate))
 		return 1; 
 	else 
-		return IsHaveEngTranslate(dictionary, wordToTranslate);
+		return IsHaveEngTranslate(wordToTranslate);
 }
 
-void SavingNewWordTranslation(multimap <string, string> &dictionary, string wordToTranslate)
+void CDictionary::SavingNewWordTranslation(string wordToTranslate)
 {
 	string translatedWord;
 	cout << "dictionary does not have a given word" << endl << "enter the translation or press enter to skip:";
-
 	getline(cin, translatedWord);
-
 	if (!translatedWord.empty())
 		if (int(translatedWord[0]) < 0 && int(translatedWord[0]) >= -32)
-			dictionary.insert(pair<string, string>(wordToTranslate, translatedWord));
+			m_dictionary.insert(pair<string, string>(wordToTranslate, translatedWord));
 		else
-			dictionary.insert(pair<string, string>(translatedWord, wordToTranslate));
+			m_dictionary.insert(pair<string, string>(translatedWord, wordToTranslate));
 	else cout << "word was ignored" << endl;
 }
 
-void InputDictionaryFromFile(multimap <string, string> &dictionary, string inputFileName)
+void CDictionary::InputDictionaryFromFile(ifstream &inputFile)
 {
-	ifstream inputFile(inputFileName);
 	if (inputFile.is_open())
 	{
 		string word;
@@ -99,12 +131,13 @@ void InputDictionaryFromFile(multimap <string, string> &dictionary, string input
 
 			word = line.substr(0, translatePosition-2);
 			translatedWord = line.substr(translatePosition-1, line.length());
-			dictionary.insert(pair<string, string>(word, translatedWord));
+			m_dictionary.insert(pair<string, string>(word, translatedWord));
 		}
 	}
 	else
 	{
 		cout << "input file is not opened" << endl;
-		ofstream outputFile(inputFileName);
+		ofstream outputFile(m_fileName);
+		outputFile.flush();
 	}
 }

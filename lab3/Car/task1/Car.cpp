@@ -1,105 +1,140 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Car.h"
-#include "CarSet.h"
-#include <boost/range/algorithm/transform.hpp>
 
 using namespace std;
-using namespace std::placeholders;
 
-CCarControl::CCarControl(CCarSet & car, std::istream & input, std::ostream & output)
-	: m_car(car)
-	, m_input(input)
-	, m_output(output)
-	, m_actionMap({
-		{ "engineon", bind(&CCarControl::TurnOnEngine, this, _1) },
-		{ "engineoff", bind(&CCarControl::TurnOffEngine, this, _1) },
-		{ "info", bind(&CCarControl::GetInfo, this, _1) },
-		{ "setgear", bind(&CCarControl::SetGear, this, _1) },
-		{ "setspeed", bind(&CCarControl::SetSpeed, this, _1)},
-})
+const vector<int> maxSpeedInGear = { 20, 0, 30, 50, 60, 90, 150 };
+const vector<int> minSpeedInGear = { 0, 0, 0, 20, 30, 40, 50 };
+const int amountOfGear = 7;
+
+bool CCar::IsTurnedOn()const
 {
+	return m_isOn;
 }
 
-bool CCarControl::GetInfo(std::istream & args)const
+bool CCar::TurnOn()
 {
-	cout << "engine is turned ";
-	if (m_car.IsTurnedOn())
-		cout << "on; ";
-	else cout << "off; ";
-
-	cout << "direction of movement is " << m_car.GetMovement() << "; ";
-	
-	cout << "speed = " << m_car.GetSpeed() << "; ";
-
-	cout << "gear = " << m_car.GetGear() << endl;
-
+	m_isOn = true;
 	return true;
 }
 
-bool CCarControl::HandleCommand()
+bool CCar::TurnOff()
 {
-	string commandLine;
-	getline(m_input, commandLine);
-	transform(commandLine.begin(), commandLine.end(), commandLine.begin(), tolower);
-	istringstream strm(commandLine);
-	string action;
-	strm >> action;
-	if ((action == "setspeed" || action == "setgear"))
+	if (m_currentSpeed == 0 && m_currentGear == 0)
 	{
-		string value;
-		strm >> value;
-
-		if (action == "setspeed")
-			m_newSpeed = stoi(value);
-		else
-			if (action == "setgear")
-				m_newGear = stoi(value);
+		m_isOn = false;
+		return true;
 	}
-	else
-		if (action == "info" || action == "engineoff" || action == "engineon");
-		else
-			return 0;
+	return false;
+}
 
-	auto it = m_actionMap.find(action);
-	if (it != m_actionMap.end())
+int CCar::GetGear()const
+{
+	return m_currentGear;
+}
+
+bool CCar::SelectGear(int gear)
+{
+	bool isAvailableGear = (gear >= -1) && (gear <= 5);
+
+	if (isAvailableGear && m_isOn)
 	{
-		it->second(strm);
+		if (gear == -1)
+			if (m_currentSpeed == 0)
+			{
+				m_currentGear = gear;
+				return true;
+			}
+			else
+				return false;
+
+		if (m_currentGear != 0 && gear == 0)
+		{
+			m_currentGear = gear;
+			return true;
+		}
+
+		if (m_currentGear == -1)
+			if (m_currentSpeed == 0 && (gear == 0 || gear == 1))
+			{
+				m_currentGear = gear;
+				return true;
+			}
+			else
+				return false;
+
+		if (gear == 1 && m_currentGear == 0)
+			if (m_movement == STAY)
+			{
+				m_currentGear = gear;
+				return true;
+			}
+			else
+				return false;
+
+		for (int i = -1; i < amountOfGear; i++)
+			if (gear == i && m_currentSpeed <= maxSpeedInGear[i + 1] && m_currentSpeed >= minSpeedInGear[i + 1])
+			{
+				m_currentGear = gear;
+				return true;
+			}
+
 	}
-	else 
-		return false;
-
-	return true;
+	return false;
 }
 
-bool CCarControl::TurnOnEngine(std::istream & args)
+int CCar::GetSpeed()const
 {
-	m_car.TurnOn();
-	m_output << "Engine is turned on" << endl;
-	return true;
-}
-bool CCarControl::TurnOffEngine(std::istream & args)
-{
-	if (m_car.TurnOff())
-		m_output << "Engine is turned off" << endl;
-	else m_output << "error, lose speed and use neutral gear" << endl;
-	return true;
+	return m_currentSpeed;
 }
 
-bool CCarControl::SetSpeed(std::istream & args)
+bool CCar::SelectSpeed(int speed)
 {
-	if (m_car.SelectSpeed(m_newSpeed))
-		m_output << "Speed changed" << endl;
-	else 
-		m_output << "error speed" << endl;
-	return true;
-}
+	bool isAvailableSpeed = (speed >= 0) && (speed <= 150);
 
-bool CCarControl::SetGear(std::istream & args)
-{
+	if (isAvailableSpeed && m_isOn)
+	{
+		if (m_currentGear == 0 && speed < m_currentSpeed)
+		{
+			m_currentSpeed = speed;		
+			SetMovement(m_currentSpeed, m_currentGear);
+			return true;
+		}
+		else
+			for (int i = -1; i < amountOfGear; i++)
+			{
+				
+				if (m_currentGear == i && speed <= maxSpeedInGear[i + 1] && speed >= minSpeedInGear[i + 1])
+				{
+					m_currentSpeed = speed;
+					SetMovement(m_currentSpeed, m_currentGear);
+					return true;
+				}
+			}
 	
-	if (m_car.SelectGear(m_newGear))
-		m_output << "Gear changed" << endl;
-	else
-		m_output << "error gear" << endl;
-	return 0;
+	}
+	return false;
+}
+
+MovementType CCar::GetMovement()const
+{
+	return m_movement;
+}
+
+bool CCar::SetMovement(int const & speed, int const & gear)
+{
+	if (m_isOn)
+		if (speed == 0)
+		{
+			m_movement = STAY;
+		}
+		else
+			if (gear == -1 && speed <= maxSpeedInGear[0] && speed >= minSpeedInGear[0])
+			{
+				m_movement = BACK;
+			}
+			else	
+				m_movement = FORWARD;
+
+	return true;
 }

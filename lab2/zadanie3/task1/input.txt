@@ -1,11 +1,6 @@
-brother брат
-chair стул
-cheese сыр
-cherry вишня
-cherry вишенка
+azaza азаза
 father папа
-mother мама
-new новый
-sister сестра
-sofa диван
-table стол
+hello привет
+kek кек
+lel лель
+topkek топчик
