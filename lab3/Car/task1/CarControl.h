@@ -1,4 +1,5 @@
 ﻿#pragma once
+#pragma warning(disable:4100)
 #include "Car.h"
 
 class CCarControl : boost::noncopyable

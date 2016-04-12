@@ -1,47 +1,94 @@
 ﻿#include "stdafx.h"
-#include "..\task1\HtmlDecode.h"
+#include <Windows.h>
+#include "..\task1\DictionaryLogic.h"
+
 
 using namespace std;
 
-bool StringsAreEqual(string const x, string const y)
+struct dictionary
 {
-	return x == y;
-}
+	CDictionaryLogic log;
+};
 
-BOOST_AUTO_TEST_SUITE(ProcessVector_function)
+BOOST_FIXTURE_TEST_SUITE(start_dictionary_tests, dictionary)
 
 	// Создает пустой вектор из пустого вектора
-	BOOST_AUTO_TEST_CASE(makes_empty_dictionary)
+	BOOST_AUTO_TEST_CASE(load_empty_dictionary)
 	{
-		multimap <string, string> dictionary;
+		log.m_fileName = "tests1.txt";
+
+		ifstream inputFile(log.GetFileName());
 		
-		StringHtmlDecode(emptyString);
-		BOOST_CHECK(emptyString.empty()); 
+		log.InputDictionary();
+
+		BOOST_CHECK(log.GetDictionary().empty());
+	
 	}
 
-/*	BOOST_AUTO_TEST_CASE(processing_a_string_without_word_for_change)
+	BOOST_AUTO_TEST_CASE(load_not_empty_dictionary)
 	{
-		string line = "&quot &lt";
-		string result = StringHtmlDecode(line);
-		
-		BOOST_CHECK(StringsAreEqual(line, result));
+		log.m_fileName = "tests2.txt";
+
+		ifstream inputFile(log.GetFileName());
+	
+		log.InputDictionary();
+
+		BOOST_CHECK(!log.GetDictionary().empty());
 	}
 
-	BOOST_AUTO_TEST_CASE(processing_a_string_with_only_one_word_for_change)
+	BOOST_AUTO_TEST_CASE(can_find_word_in_dictionary_and_save_it)
 	{
-		string line = "&quot &gt;";
-		string rightLine = "&quot >";
-		string result = StringHtmlDecode(line);
-		BOOST_CHECK(StringsAreEqual(rightLine, result));
-	}
+		log.m_fileName = "tests2.txt";
 
-	BOOST_AUTO_TEST_CASE(processing_a_string_with_more_than_one_word_for_change)
+		ifstream inputFile(log.GetFileName());
+
+		log.InputDictionary();
+		string word = "hi";
+		BOOST_CHECK(!log.GetDictionary().empty());
+		BOOST_CHECK(log.IsHaveRusTranslate(word));
+		word = "привет";
+		BOOST_CHECK(!log.IsHaveRusTranslate(word));
+		BOOST_CHECK(log.IsHaveEngTranslate(word));
+		multimap <string, string> dictionary = log.GetDictionary();
+		log.SaveDictionaryInFile();
+		log.InputDictionary();
+		BOOST_CHECK(log.GetDictionary() == dictionary);
+	}
+	
+	BOOST_AUTO_TEST_CASE(can_add_word_in_dictionary)
 	{
-		string line = "&quot; privet &apos; :) &lt; qwerty &gt&amp;";
-		string rightLine = "\" privet ' :) < qwerty &gt&";
-		string result = StringHtmlDecode(line);
-		BOOST_CHECK(StringsAreEqual(rightLine, result));
-	}*/
+		log.m_fileName = "tests2.txt";
+		ifstream inputFile(log.GetFileName());
+		log.InputDictionary();
+		string word = "mother";
+		string wordTranslation = "мама";
+		BOOST_CHECK(!log.GetDictionary().empty());
+		BOOST_CHECK(!log.IsHaveRusTranslate(word));
+		log.SavingNewWordTranslation(word, wordTranslation);
+		BOOST_CHECK(log.IsHaveRusTranslate(word));
+		BOOST_CHECK(log.IsHaveEngTranslate(wordTranslation));
+	}
+	
+	BOOST_AUTO_TEST_CASE(can_create_empty_dictionary_and_add_some_words)
+	{
+		log.m_fileName = "tests3.txt";
+		ifstream inputFile(log.GetFileName());
+		log.InputDictionary();
+		BOOST_CHECK(log.GetDictionary().empty());
+		string firstWord = "mother";
+		string firstWordTranslation = "мама";	
+		BOOST_CHECK(!log.IsHaveRusTranslate(firstWord));
+		log.SavingNewWordTranslation(firstWord, firstWordTranslation);
+		string secondWord = "father";
+		string secondWordTranslation = "папа";
+		BOOST_CHECK(!log.IsHaveRusTranslate(secondWord));
+		log.SavingNewWordTranslation(secondWord, secondWordTranslation);
+		multimap <string, string> dictionary = log.GetDictionary();
+		log.SaveDictionaryInFile();
+		log.InputDictionary();
+		BOOST_CHECK(log.GetDictionary() == dictionary && !dictionary.empty());
+		std::remove(log.m_fileName.c_str());
+	}
 
 BOOST_AUTO_TEST_SUITE_END()
 

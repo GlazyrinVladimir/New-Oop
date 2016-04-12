@@ -16,14 +16,23 @@
 #include <boost/noncopyable.hpp>
 #include "DictionaryLogic.h"
 
+using namespace std;
+
 class CDictionary : boost::noncopyable
 {
 public:
-	std::string GetWordToTranslate();
+	string GetWordToTranslate();
+	void SaveDictionaryInFile();
 	void DialogBeforeFinishWithUser();
 	void StartWorkWithDictionary();
-	bool IsHaveTranslate(std::string &wordToTranslate);
+	bool IsHaveTranslate(string &wordToTranslate);
+	void InputDictionaryFromFile();
+	
+	void SavingNewWordTranslation(string wordToTranslate, string translatedWord);
 private:
-	CDictionaryLogic logic;	
+	CDictionaryLogic logic;
+	//multimap <string, string> m_dictionary;
+//private:
+	
 };
 

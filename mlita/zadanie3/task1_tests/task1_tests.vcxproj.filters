@@ -24,10 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dictionary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DictionaryLogic.h">
+    <ClInclude Include="..\task1\Dictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,13 +32,13 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dictionary.cpp">
+    <ClCompile Include="task1_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="DictionaryTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DictionaryLogic.cpp">
+    <ClCompile Include="..\task1\Dictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
