@@ -12,13 +12,15 @@ void CDictionary::StartWorkWithDictionary()
 	while (wordToTranslate != "...")
 	{
 		wordToTranslate = GetWordToTranslate();
-		if (!IsHaveTranslate(wordToTranslate) && wordToTranslate != "...")
+		if (!HaveTranslate(wordToTranslate) && wordToTranslate != "...")
 		{
 			cout << "dictionary does not have a given word" << endl << "enter the translation or press enter to skip:";
 			string translation = logic.GetTranslation();
 			logic.SavingNewWordTranslation(wordToTranslate, translation);
 		}
 	}
+
+	DialogBeforeFinishWithUser();
 }
 
 void CDictionary::DialogBeforeFinishWithUser()
@@ -43,12 +45,12 @@ string CDictionary::GetWordToTranslate()
 	return wordToTranslate;
 }
 
-bool CDictionary::IsHaveTranslate(string &wordToTranslate)
+bool CDictionary::HaveTranslate(string const & wordToTranslate)
 {
-	if (logic.IsHaveRusTranslate(wordToTranslate))
-		return 1; 
+	if (logic.HaveRusTranslate(wordToTranslate))
+		return true; 
 	else 
-		return logic.IsHaveEngTranslate(wordToTranslate);
+		return logic.HaveEngTranslate(wordToTranslate);
 }
 
 

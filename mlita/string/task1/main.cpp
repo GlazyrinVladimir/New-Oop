@@ -9,6 +9,7 @@
 #include <fstream>
 #include "Dictionary.h"
 
+#define SIZE 8
 using namespace std;
 
 int _tmain()
@@ -17,10 +18,12 @@ int _tmain()
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
 
-	CDictionary dic;
+	CSuprefiksCheck suprefiks;
+	suprefiks.GetWordsAndSuprefiks("tests2.txt");
+	suprefiks.CountWordsContainsSuprefiksWords();
+	suprefiks.WriteNumberOfSuprefiks();
 
-	dic.StartWorkWithDictionary();
-
+	
 	return 0;
 }
 

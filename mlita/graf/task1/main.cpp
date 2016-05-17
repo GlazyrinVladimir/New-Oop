@@ -56,7 +56,7 @@ int _tmain()
 	}
 	d[0] = 0;
 
-	do {
+/*	do {
 		minindex = 10000;
 		min = 10000;
 		for (int i = 0; i<SIZE;i++) {
@@ -75,11 +75,11 @@ int _tmain()
 			}
 			v[minindex] = 0;
 		}
-	} while (minindex < 10000);
+	} while (minindex < 10000);*/
 
 
-	/*do {
-		cout << "итерация" << endl;
+	do {
+	//	cout << "итерация" << endl;
 		minindex = 10000;
 		min = 10000;
 		for (int i = 0; i<cities;i++)
@@ -88,7 +88,7 @@ int _tmain()
 				min = d[i];
 				minindex = i;
 			}
-			cout << min << " " << minindex << endl;
+		//	cout << min << " " << minindex << endl;
 		}
 		if (minindex != 10000) {
 			for (int i = 0;i<cities;i++) {
@@ -105,7 +105,7 @@ int _tmain()
 			}
 			v[minindex] = 0;
 		}
-	} while (minindex < 10000);*/
+	} while (minindex < 10000);
 
 	for (size_t i = 1; i < cities; i++)
 		cout << d[i] << " ";

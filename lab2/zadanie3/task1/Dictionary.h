@@ -22,7 +22,7 @@ public:
 	std::string GetWordToTranslate();
 	void DialogBeforeFinishWithUser();
 	void StartWorkWithDictionary();
-	bool IsHaveTranslate(std::string &wordToTranslate);
+	bool HaveTranslate(std::string const & wordToTranslate);
 private:
 	CDictionaryLogic logic;	
 };

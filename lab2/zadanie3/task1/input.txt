@@ -1,10 +1,14 @@
-chair стул
-father папа
-hello привет
-hello my friend здравствуй
-мой друг
-hi привет
-mother мама
-orange апельсин
-table стол
-topkek топчик
+also : также
+apple : €блоко
+chair : стул
+father : папа
+grape : виноград
+hello : привет
+hello my friend : здравствуй мой друг
+hi : привет
+mother : мама
+orange : апельсин
+plus : плюс
+side : сторона
+table  : стол
+terrible : ужасно

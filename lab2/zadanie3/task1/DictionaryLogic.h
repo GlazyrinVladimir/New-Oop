@@ -10,11 +10,11 @@ public:
 	std::string GetFileName();
 	void SetFileName();
 	std::multimap <std::string, std::string> GetDictionary();
-	bool IsHaveRusTranslate(std::string &wordToTranslate);
-	bool IsHaveEngTranslate(std::string &wordToTranslate);
+	bool HaveRusTranslate(std::string const & wordToTranslate);
+	bool HaveEngTranslate(std::string const & wordToTranslate);
 	std::string GetTranslation();
 	void InputDictionary();
-	void SavingNewWordTranslation(std::string wordToTranslate, std::string translatedWord);
+	void SavingNewWordTranslation(std::string const & wordToTranslate, std::string const & translatedWord);
 	void SaveDictionaryInFile();
 	std::string m_fileName;
 private:

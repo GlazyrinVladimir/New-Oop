@@ -68,6 +68,14 @@ BOOST_FIXTURE_TEST_SUITE(Check_engine, Car_)
 			ExpectOperationSucceeds([=] {return car.SetMovement(10, 1);}, 1, 10);
 		}
 
+		BOOST_AUTO_TEST_CASE(cant_switch_off_engine_when_moving_or_have_gear)
+		{
+			ExpectOperationSucceeds([=] { return car.SelectGear(1);}, 1, 0);
+			ExpectOperationSucceeds([=] { return car.SelectSpeed(10);}, 1, 10);
+			ExpectOperationSucceeds([=] {return car.SetMovement(10, 1);}, 1, 10);
+			ExpectOperationFails([=] { return car.TurnOff();});
+		}
+
 		BOOST_AUTO_TEST_CASE(try_to_change_speed_and_gear_in_out_of_max_interval)
 		{
 			ExpectOperationSucceeds([=] { return car.SelectGear(1);}, 1, 0);

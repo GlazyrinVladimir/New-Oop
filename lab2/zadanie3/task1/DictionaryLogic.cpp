@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DictionaryLogic.h"
+#include <sstream>
 
 using namespace std;
 
@@ -26,7 +27,7 @@ string CDictionaryLogic::GetTranslation()
 	return translatedWord;
 }
 
-bool CDictionaryLogic::IsHaveEngTranslate(string &wordToTranslate)
+bool CDictionaryLogic::HaveEngTranslate(string const &wordToTranslate)
 {
 	bool isTranslated = false;
 
@@ -42,7 +43,7 @@ bool CDictionaryLogic::IsHaveEngTranslate(string &wordToTranslate)
 	return isTranslated;
 }
 
-bool CDictionaryLogic::IsHaveRusTranslate(string &wordToTranslate)
+bool CDictionaryLogic::HaveRusTranslate(string const &wordToTranslate)
 {
 	bool isTranslated = false;
 
@@ -66,20 +67,22 @@ void CDictionaryLogic::InputDictionary()
 		string word;
 		string translatedWord;
 		string line;
+		string delimiter = ":";
 		while (getline(inputFile, line))
 		{
 			size_t translatePosition;
-			bool isFindTranslateWord = false;
+			bool isFindDelimeter = false;
 
 			transform(line.begin(), line.end(), line.begin(), tolower);
 
-			for (translatePosition = 0; !isFindTranslateWord; translatePosition++)
+			for (translatePosition = 0; !isFindDelimeter; translatePosition++)
 			{
-				if (int(line[translatePosition]) >= -32 && int(line[translatePosition]) < 0) isFindTranslateWord = true;
+				if (line[translatePosition] == delimiter[0])
+					isFindDelimeter = true;
 			}
 
 			word = line.substr(0, translatePosition - 2);
-			translatedWord = line.substr(translatePosition - 1, line.length());
+			translatedWord = line.substr(translatePosition + 1, line.length());
 			m_dictionary.insert(pair<string, string>(word, translatedWord));
 		}
 	}
@@ -91,13 +94,13 @@ void CDictionaryLogic::InputDictionary()
 	}
 }
 
-void CDictionaryLogic::SavingNewWordTranslation(string wordToTranslate, string translatedWord)
+void CDictionaryLogic::SavingNewWordTranslation(string const & wordToTranslate, string const & translatedWord)
 {
 	if (!translatedWord.empty())
-		if (int(translatedWord[0]) < 0 && int(translatedWord[0]) >= -32)
-			m_dictionary.insert(pair<string, string>(wordToTranslate, translatedWord));
-		else
+		if (int(translatedWord[0]) <= 122 && int(translatedWord[0]) >= 97)
 			m_dictionary.insert(pair<string, string>(translatedWord, wordToTranslate));
+		else
+			m_dictionary.insert(pair<string, string>(wordToTranslate, translatedWord));
 	else cout << "word was ignored" << endl;
 }
 
@@ -106,7 +109,7 @@ void CDictionaryLogic::SaveDictionaryInFile()
 	ofstream outputFile(GetFileName());
 	for (auto it = m_dictionary.begin(); it != m_dictionary.end(); ++it)
 	{
-		outputFile << it->first << " " << it->second << endl;
+		outputFile << it->first << " : " << it->second << endl;
 	}
 	outputFile.flush();
 	m_dictionary.clear();
