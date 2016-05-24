@@ -10,6 +10,7 @@ struct suprefiksSearch
 	string firstTestFile = "empty.txt";
 	string secondTestFile = "input.txt";
 	string thirdTestFile = "tests2.txt";
+	string fourthTestFile = "tests3.txt";
 };
 
 BOOST_FIXTURE_TEST_SUITE(start_suprefiks_search_tests, suprefiksSearch)
@@ -36,6 +37,11 @@ BOOST_FIXTURE_TEST_SUITE(start_suprefiks_search_tests, suprefiksSearch)
 		suprefiks.CountWordsContainsSuprefiksWords();
 		BOOST_CHECK(suprefiks.GetCountOfSuprefiks() == suprefiksTest);
 	}
+
+	/*BOOST_AUTO_TEST_CASE(third_test)
+	{
+		BOOST_CHECK(!suprefiks.GetWordsAndSuprefiks(fourthTestFile));
+	}*/
 BOOST_AUTO_TEST_SUITE_END()
 
 

@@ -8,22 +8,22 @@
 #include <map>
 #include <fstream>
 #include "Dictionary.h"
+#include <ctime>
 
-#define SIZE 8
 using namespace std;
 
 int _tmain()
 {
+	srand(time(0));
 	setlocale(LC_ALL, "RUS");
 	SetConsoleOutputCP(1251);
 	SetConsoleCP(1251);
 
 	CSuprefiksCheck suprefiks;
-	suprefiks.GetWordsAndSuprefiks("tests2.txt");
+	suprefiks.GetWordsAndSuprefiks("input.txt");
 	suprefiks.CountWordsContainsSuprefiksWords();
 	suprefiks.WriteNumberOfSuprefiks();
-
-	
+	cout << "runtime = " << clock() / 1000.0 << endl; // גנולÿ נאבמעû ןנמדנאללû 
 	return 0;
 }
 

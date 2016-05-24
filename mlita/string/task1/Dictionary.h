@@ -16,10 +16,12 @@
 #include <vector>
 #include <boost/noncopyable.hpp>
 #include <iostream>
+#include <sstream>
+
 class CSuprefiksCheck : boost::noncopyable
 {
 public:
-	void GetWordsAndSuprefiks(std::string const & fileName);
+	bool GetWordsAndSuprefiks(std::string const & fileName);
 	void CountWordsContainsSuprefiksWords();
 	std::vector<std::string> GetWords();
 	std::vector<std::string> GetSuprefiks();
