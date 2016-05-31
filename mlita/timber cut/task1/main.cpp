@@ -8,8 +8,8 @@ using namespace std;
 
 int _tmain()
 {
-	int timberLen = 100000;
-	int timberCut = 1;
+	int timberLen = 13;
+	int timberCut = 10;
 
 	CTimber timber;
 

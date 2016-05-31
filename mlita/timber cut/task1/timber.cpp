@@ -10,12 +10,51 @@ size_t CTimber::GetCost()const
 
 void CTimber::CutTimber(unsigned timberLen, unsigned numberOfCuts)
 {
-	if (numberOfCuts > 0 || timberLen<numberOfCuts)
+	if (numberOfCuts > 0 || timberLen < numberOfCuts)
 	{
 		m_cost = timberLen;
-		m_cuts.push_back(numberOfCuts);
-		m_cuts.push_back(timberLen - numberOfCuts);
+		size_t place;
+
+		if (timberLen / 2 > numberOfCuts)
+		{
+			if (numberOfCuts > 1)
+				m_cuts.push_back(numberOfCuts);
+			if ((timberLen - numberOfCuts) > 1)
+				m_cuts.push_back(timberLen - numberOfCuts);
+
+		}
+		else
+		{
+			int firstHalfOfCut = timberLen / 2;		
+			int secondHalfOfCut = timberLen - firstHalfOfCut;
+
+			if (firstHalfOfCut > 1)
+				m_cuts.push_back(firstHalfOfCut);
+			if ((secondHalfOfCut) > 1)
+				m_cuts.push_back(secondHalfOfCut);
+
+			if (firstHalfOfCut > secondHalfOfCut)
+			{
+	
+				int x = secondHalfOfCut / 2;
+				int y = secondHalfOfCut - x;
+				m_cuts.push_back(x);
+				m_cuts.push_back(y);
+			}
+			else
+			{
+				int x = firstHalfOfCut / 2;
+				int y = firstHalfOfCut - x;
+				m_cuts.push_back(x);
+				m_cuts.push_back(y);
+
+			}
+
+		}
 		std::sort(m_cuts.begin(), m_cuts.end());
+
+		/*for (size_t i = 0; i < m_cuts.size(); i++)
+			cout << m_cuts[i] << endl;*/
 
 		for (size_t i = 0; i < numberOfCuts - 1; i++)
 		{
@@ -34,6 +73,7 @@ void CTimber::CutTimber(unsigned timberLen, unsigned numberOfCuts)
 			{
 				m_cuts.push_back(secondHalfOfCut);
 			}
+			place = m_cuts.size();
 			std::sort(m_cuts.begin(), m_cuts.end());
 
 		}
