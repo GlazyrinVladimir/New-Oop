@@ -26,7 +26,7 @@ BOOST_AUTO_TEST_CASE(can_count_up_some_float_numbers)
 BOOST_AUTO_TEST_CASE(can_concatenate_some_words)
 {
 	vector<string> testArray = { "hello"," ","world","!" };
-	BOOST_CHECK_EQUAL("", ArraySum(testArray));
+	BOOST_CHECK_EQUAL("hello world!", ArraySum(testArray));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
