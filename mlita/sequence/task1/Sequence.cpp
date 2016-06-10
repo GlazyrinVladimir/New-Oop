@@ -5,8 +5,6 @@ using namespace std;
 
 bool CSequence::ReadSequence(std::string const & name)
 {
-
-	
 	ifstream inputFile(name);
 	if (inputFile.is_open())
 	{
