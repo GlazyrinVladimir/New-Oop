@@ -1,7 +1,4 @@
-﻿// task1.cpp : Defines the entry point for the console application.
-//
-
-/*
+﻿/*
 Счастливые билеты (7). Номера автобусных билетов состоят из 2N цифр, включая
 
 незначащие нули (1 ≤ N ≤ 500). Минимальный возможный номер состоит из 2N нулей, а
@@ -33,22 +30,22 @@
 
 #include "stdafx.h"
 #include "luckyTicketsCalculation.h"
-
 using namespace std;
 
 int main()
 {
-	luckyTicketsCalculation ticket;
+	CLuckyTicketsCalculation ticket;
 
 	if (ticket.GetTicketNumber("test5.txt"))
 	{
-		cout << ticket.GetMinNumberOfNextTickets();
+		ticket.GetMinNumberOfNextTickets();
+		ticket.OutputAnswer();
 	}
 	else
 	{
 		cout << "error file name";
 	}
-
+	
 	return 0;
 }
 

@@ -24,7 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\task1\Abracadabra.h">
+    <ClInclude Include="..\task1\luckyTicketsCalculation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,10 +35,10 @@
     <ClCompile Include="task1_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\task1\Abracadabra.cpp">
+    <ClCompile Include="LuckyTicketsTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AbracadabraTests.cpp">
+    <ClCompile Include="..\task1\luckyTicketsCalculation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

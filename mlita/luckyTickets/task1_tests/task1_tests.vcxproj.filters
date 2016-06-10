@@ -35,7 +35,7 @@
     <ClCompile Include="task1_tests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LuckyTicketsTests.cpp">
+    <ClCompile Include="LuckyTicketTests.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\task1\luckyTicketsCalculation.cpp">
