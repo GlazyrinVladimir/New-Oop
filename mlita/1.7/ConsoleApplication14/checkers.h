@@ -15,20 +15,28 @@
 #include <SFML/Graphics.hpp>
 #include <map>
 
+const unsigned int WALL = 5;
+const unsigned int TIMETOUPDATETIMER = 30000;
 class CCheckers
 {
 public:
-	void SearchMaxWay(int m[10][10], int x, int y, int &way, sf::RenderWindow &window);
-	bool ReadData(int matrix[10][10], int &x, int &y);
-	void FillMatrixWithZeros(int matrix[10][10]);
+	CCheckers(std::string fonImage, std::string blackImage, std::string whiteImage);
+
+	void SearchMaxWay(sf::RenderWindow &window);
+	bool ReadData();
+	void FillMatrixWithZeros();
 	void WriteMaxWay();
 	std::multimap<int,int> GetBlackPosition()const;
-	void LoadObjects();
-	void Update(sf::RenderWindow &window, int x, int y);
+	void Update(sf::RenderWindow &window);
 private:
-	int maxWay = 0;
+	void DoNextStep(sf::RenderWindow &window, int x, int y);
+	
+	int m_maxWay = 0;
+	int m_currentWay;
+	int m_matrix[10][10];
 	int whiteX;
 	int whiteY;
+	double updateTimer = 0;
 	std::multimap<int, int> blackCheckersPosition;
 
 	sf::Sprite fon;

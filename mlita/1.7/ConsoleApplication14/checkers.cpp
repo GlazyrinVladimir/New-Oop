@@ -3,11 +3,35 @@
 using namespace std;
 using namespace sf;
 
-void CCheckers::FillMatrixWithZeros(int matrix[10][10])
+CCheckers::CCheckers(std::string fonImage, std::string blackImage, std::string whiteImage)
+{
+	sf::RenderWindow window(sf::VideoMode(640, 640), "RGR MLITA");
+	Texture fonTexture;
+	fonTexture.loadFromFile(fonImage);
+	fon.setTexture(fonTexture);
+	Texture blackCheckerTexture;
+	blackCheckerTexture.loadFromFile(blackImage);
+	blackChecker.setTexture(blackCheckerTexture);
+	Texture whiteCheckerTexture;
+	whiteCheckerTexture.loadFromFile(whiteImage);
+	whiteChecker.setTexture(whiteCheckerTexture);
+
+	blackChecker.setScale(2.0f, 2.0f);
+	whiteChecker.setScale(2.0f, 2.0f);
+	
+	FillMatrixWithZeros();
+	ReadData();
+	SearchMaxWay(window);
+	WriteMaxWay();
+}
+
+
+
+void CCheckers::FillMatrixWithZeros()
 {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++)
-			matrix[i][j] = 5;
+			m_matrix[i][j] = WALL;
 }
 
 std::multimap<int, int> CCheckers::GetBlackPosition()const
@@ -18,76 +42,38 @@ std::multimap<int, int> CCheckers::GetBlackPosition()const
 void CCheckers::WriteMaxWay()
 {
 	ofstream outputFile("output.txt");
-	outputFile << maxWay << endl;
+	outputFile << m_maxWay << endl;
+
 }
 
-void CCheckers::LoadObjects()
-{
-	Image fonImage;
-	fonImage.loadFromFile("files/fon.png");
-	Texture fontexture;
-	fontexture.loadFromImage(fonImage);
-	fon.setTexture(fontexture);
-
-	Image blackCheckImage;
-	blackCheckImage.loadFromFile("files/black.png");
-	Texture blackCheckTexture;
-	blackCheckTexture.loadFromImage(blackCheckImage);
-	blackChecker.setTexture(blackCheckTexture);
-	blackChecker.setScale(2.0f, 2.0f);
-
-	Image whiteCheckImage;
-	whiteCheckImage.loadFromFile("files/white.png");
-	Texture whiteCheckTexture;
-	whiteCheckTexture.loadFromImage(whiteCheckImage);
-	whiteChecker.setTexture(whiteCheckTexture);
-}
-
-void CCheckers::Update(sf::RenderWindow &window, int x, int y)
+void CCheckers::Update(sf::RenderWindow &window)
 {
 	window.clear();
-	Image fonImage;
-	fonImage.loadFromFile("files/fon.png");
-	Texture fontexture;
-	fontexture.loadFromImage(fonImage);
-	fon.setTexture(fontexture);
 
-	Image blackCheckImage;
-	blackCheckImage.loadFromFile("files/black.png");
-	Texture blackCheckTexture;
-	blackCheckTexture.loadFromImage(blackCheckImage);
-	blackChecker.setTexture(blackCheckTexture);
-	blackChecker.setScale(2.0f, 2.0f);
+	whiteChecker.setPosition(float((whiteX - 1) * 80), float((whiteY - 1) * 80));
 
-	Image whiteCheckImage;
-	whiteCheckImage.loadFromFile("files/white.png");
-	Texture whiteCheckTexture;
-	whiteCheckTexture.loadFromImage(whiteCheckImage);
-	whiteChecker.setScale(2.0f, 2.0f);
-	whiteChecker.setTexture(whiteCheckTexture);
-	whiteChecker.setPosition((x - 1) * 80, (y - 1) * 80);
-	double time = 0;
-	while (time < 10000)
+	while (updateTimer < TIMETOUPDATETIMER)
 	{
-		time += 0.00025;
+		updateTimer += 0.00025;
 	}
+	updateTimer = 0;
 	window.draw(fon);
+
 	for (auto it = blackCheckersPosition.begin(); it != blackCheckersPosition.end(); ++it)
 	{
 		
-		blackChecker.setPosition(80 * (it->second - 1), 80 * (it->first - 1));
+		blackChecker.setPosition(float(80 * (it->second - 1)),float(80 * (it->first - 1)));
 		window.draw(blackChecker);
 	}
 	window.draw(whiteChecker);
 	window.display();
 }
 
-bool CCheckers::ReadData(int matrix[10][10], int &x, int &y)
+bool CCheckers::ReadData()
 {
-	ifstream inputFile("input.txt");
+	ifstream inputFile("test.txt");
 	if (inputFile.is_open())
 	{
-		LoadObjects();
 		char storage;
 		for (int i = 1; i < 9; i++)
 		{
@@ -96,18 +82,18 @@ bool CCheckers::ReadData(int matrix[10][10], int &x, int &y)
 				inputFile >> storage;
 				if (storage == '1')
 				{
-					matrix[i][j] = 1;			
+					m_matrix[i][j] = 1;
 					blackCheckersPosition.insert(pair<int, int>(i, j));
 				}
 				if (storage == '2')
 				{
-					matrix[i][j] = 0;
-					y = i;
-					x = j;
+					m_matrix[i][j] = 0;
+					whiteY = i;
+					whiteX = j;
 				}
 				if (storage == '0')
 				{
-					matrix[i][j] = 0;
+					m_matrix[i][j] = 0;
 				}
 			}
 		}
@@ -119,49 +105,51 @@ bool CCheckers::ReadData(int matrix[10][10], int &x, int &y)
 	return true;
 }
 
-void CCheckers::SearchMaxWay(int m[10][10], int x, int y, int &way, sf::RenderWindow &window)
+void CCheckers::DoNextStep(sf::RenderWindow &window, int x, int y)
 {
-	Update(window, x, y);
-	if (way > maxWay) maxWay = way;
+	m_currentWay += 1;
+	m_matrix[whiteY + y][whiteX + x] = 0;
+	whiteX += 2 * x;
+	whiteY += 2 * y;
+	SearchMaxWay(window);
+	whiteX += -2 * x;
+	whiteY += -2 * y;
+	m_matrix[whiteY + y][whiteX + x] = 1;
+	m_currentWay -= 1;
+	Update(window);
+}
 
-	if (m[y - 1][x + 1] != 5)
-		if (m[y - 1][x + 1] == 1 && m[y - 2][x + 2] == 0)
+void CCheckers::SearchMaxWay(sf::RenderWindow &window)
+{
+	Update(window);
+	if (m_currentWay > m_maxWay) m_maxWay = m_currentWay;
+	{
+		if (m_matrix[whiteY - 1][whiteX + 1] != WALL)
+			if (m_matrix[whiteY - 1][whiteX + 1] == 1 && m_matrix[whiteY - 2][whiteX + 2] == 0)
+			{
+				DoNextStep(window, 1, -1);
+			}
+	}
+	if (m_matrix[whiteY + 1][whiteX + 1] != WALL)
+	{
+		if (m_matrix[whiteY + 1][whiteX + 1] == 1 && m_matrix[whiteY + 2][whiteX + 2] == 0)
 		{
-			way += 1;
-			m[y - 1][x + 1] = 0;
-			SearchMaxWay(m, x + 2, y - 2, way, window);
-			m[y - 1][x + 1] = 1;
-			way -= 1;
+			DoNextStep(window, 1, 1);
 		}
-	Update(window, x, y);
-	if (m[y + 1][x + 1] != 5)
-		if (m[y + 1][x + 1] == 1 && m[y + 2][x + 2] == 0)
+	}
+	if (m_matrix[whiteY + 1][whiteX - 1] != WALL)
+	{
+		if (m_matrix[whiteY + 1][whiteX - 1] == 1 && m_matrix[whiteY + 2][whiteX - 2] == 0)
 		{
-			way += 1;
-			m[y + 1][x + 1] = 0;
-			SearchMaxWay(m, x + 2, y + 2, way, window);
-			m[y + 1][x + 1] = 1;
-			way -= 1;
+			DoNextStep(window, -1, 1);
 		}
-	Update(window, x, y);
-	if (m[y + 1][x - 1] != 5)
-		if (m[y + 1][x - 1] == 1 && m[y + 2][x - 2] == 0)
+	}
+
+	if (m_matrix[whiteY - 1][whiteX - 1] != WALL)
+	{
+		if (m_matrix[whiteY - 1][whiteX - 1] == 1 && m_matrix[whiteY - 2][whiteX - 2] == 0)
 		{
-			way += 1;
-			m[y + 1][x - 1] = 0;
-			SearchMaxWay(m, x - 2, y + 2, way, window);
-			m[y + 1][x - 1] = 1;
-			way -= 1;
+			DoNextStep(window, -1, -1);
 		}
-	Update(window, x, y);
-	if (m[y - 1][x - 1] != 5)                                    
-		if (m[y - 1][x - 1] == 1 && m[y - 2][x - 2] == 0)
-		{
-			way += 1;
-			m[y - 1][x - 1] = 0;
-			SearchMaxWay(m, x - 2, y - 2, way, window);
-			way -= 1;
-			m[y - 1][x - 1] = 1;
-		}
-	Update(window, x, y);
+	}
 }

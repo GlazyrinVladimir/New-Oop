@@ -19,24 +19,7 @@ using namespace std;
 
 int main()
 {
-	CCheckers checker;
-	sf::RenderWindow window(sf::VideoMode(640, 640), "RGR MLITA");
-	int matrix[10][10];
-	int x, y;
-	int way = 0;
-
-	checker.FillMatrixWithZeros(matrix);
-	checker.ReadData(matrix, x, y);
+	Texture kek;
 	
-	checker.SearchMaxWay(matrix, x, y, way, window);
-	checker.WriteMaxWay();
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-	}
+	CCheckers("files/fon.png", "files/black.png", "files/white.png");
 }
