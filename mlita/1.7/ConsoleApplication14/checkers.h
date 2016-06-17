@@ -1,38 +1,25 @@
 #pragma once
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <string>
-#include <cassert>
-#include <cstdint>
-#include <winsock.h>
-#include <cstring>
-#include <stdio.h>
-#include <conio.h>
-#include <locale.h>
-#include <vector>
-#include <list>
-#include <SFML/Graphics.hpp>
-#include <map>
+#include "stdafx.h"
 
 const unsigned int WALL = 5;
-const unsigned int TIMETOUPDATETIMER = 30000;
+const unsigned int TIMETOUPDATETIMER = 40000;
+const unsigned int RESOLUTIONOFSCREEN = 640;
+const unsigned int NUMBEROFSERIES = 8;
+
 class CCheckers
 {
 public:
 	CCheckers(std::string fonImage, std::string blackImage, std::string whiteImage);
 
-	void SearchMaxWay(sf::RenderWindow &window);
+	void SearchMaxWay(sf::RenderWindow &window, sf::Text  text);
 	bool ReadData();
 	void FillMatrixWithZeros();
 	void WriteMaxWay();
-	std::multimap<int,int> GetBlackPosition()const;
-	void Update(sf::RenderWindow &window);
+	void Update(sf::RenderWindow &window, sf::Text text);
 private:
-	void DoNextStep(sf::RenderWindow &window, int x, int y);
-	
+	void DoNextStep(sf::RenderWindow &window, int x, int y, sf::Text text);
 	int m_maxWay = 0;
-	int m_currentWay;
+	int m_currentWay = 0;
 	int m_matrix[10][10];
 	int whiteX;
 	int whiteY;

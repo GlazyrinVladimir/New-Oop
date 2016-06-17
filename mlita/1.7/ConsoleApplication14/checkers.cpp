@@ -5,7 +5,7 @@ using namespace sf;
 
 CCheckers::CCheckers(std::string fonImage, std::string blackImage, std::string whiteImage)
 {
-	sf::RenderWindow window(sf::VideoMode(640, 640), "RGR MLITA");
+	sf::RenderWindow window(sf::VideoMode(RESOLUTIONOFSCREEN, RESOLUTIONOFSCREEN), "RGR MLITA");
 	Texture fonTexture;
 	fonTexture.loadFromFile(fonImage);
 	fon.setTexture(fonTexture);
@@ -18,14 +18,18 @@ CCheckers::CCheckers(std::string fonImage, std::string blackImage, std::string w
 
 	blackChecker.setScale(2.0f, 2.0f);
 	whiteChecker.setScale(2.0f, 2.0f);
+
+	Font font;
+	font.loadFromFile("font/arial.ttf");
+	Text text("", font, 30);
+	text.setColor(Color::Red);
+	text.setStyle(sf::Text::Bold);
 	
 	FillMatrixWithZeros();
 	ReadData();
-	SearchMaxWay(window);
+	SearchMaxWay(window, text);
 	WriteMaxWay();
 }
-
-
 
 void CCheckers::FillMatrixWithZeros()
 {
@@ -34,38 +38,39 @@ void CCheckers::FillMatrixWithZeros()
 			m_matrix[i][j] = WALL;
 }
 
-std::multimap<int, int> CCheckers::GetBlackPosition()const
-{
-	return blackCheckersPosition;
-}
-
 void CCheckers::WriteMaxWay()
 {
 	ofstream outputFile("output.txt");
 	outputFile << m_maxWay << endl;
-
 }
 
-void CCheckers::Update(sf::RenderWindow &window)
+void CCheckers::Update(sf::RenderWindow &window, Text maxWayText)
 {
 	window.clear();
 
-	whiteChecker.setPosition(float((whiteX - 1) * 80), float((whiteY - 1) * 80));
+	std::ostringstream maxWayScore;    
+	maxWayScore << m_maxWay;
+	maxWayText.setString("Max Way : " + maxWayScore.str());
+	maxWayText.setPosition(0, 0);
+
+	whiteChecker.setPosition(float((whiteX - 1) * RESOLUTIONOFSCREEN / NUMBEROFSERIES), float((whiteY - 1) * RESOLUTIONOFSCREEN / NUMBEROFSERIES));
 
 	while (updateTimer < TIMETOUPDATETIMER)
 	{
 		updateTimer += 0.00025;
 	}
+
 	updateTimer = 0;
 	window.draw(fon);
 
 	for (auto it = blackCheckersPosition.begin(); it != blackCheckersPosition.end(); ++it)
 	{
-		
-		blackChecker.setPosition(float(80 * (it->second - 1)),float(80 * (it->first - 1)));
+		blackChecker.setPosition(float(RESOLUTIONOFSCREEN / NUMBEROFSERIES * (it->second - 1)),float(RESOLUTIONOFSCREEN / NUMBEROFSERIES * (it->first - 1)));
 		window.draw(blackChecker);
 	}
+
 	window.draw(whiteChecker);
+	window.draw(maxWayText);
 	window.display();
 }
 
@@ -105,43 +110,49 @@ bool CCheckers::ReadData()
 	return true;
 }
 
-void CCheckers::DoNextStep(sf::RenderWindow &window, int x, int y)
+void CCheckers::DoNextStep(sf::RenderWindow &window, int x, int y, Text  text)
 {
 	m_currentWay += 1;
+
+	if (m_currentWay > m_maxWay)
+	{
+		m_maxWay = m_currentWay;
+	}
+
 	m_matrix[whiteY + y][whiteX + x] = 0;
 	whiteX += 2 * x;
 	whiteY += 2 * y;
-	SearchMaxWay(window);
+	SearchMaxWay(window, text);
 	whiteX += -2 * x;
 	whiteY += -2 * y;
 	m_matrix[whiteY + y][whiteX + x] = 1;
 	m_currentWay -= 1;
-	Update(window);
+	Update(window, text);
 }
 
-void CCheckers::SearchMaxWay(sf::RenderWindow &window)
+void CCheckers::SearchMaxWay(sf::RenderWindow &window, Text  text)
 {
-	Update(window);
-	if (m_currentWay > m_maxWay) m_maxWay = m_currentWay;
+	Update(window, text);
+
+	if (m_matrix[whiteY - 1][whiteX + 1] != WALL)
 	{
-		if (m_matrix[whiteY - 1][whiteX + 1] != WALL)
-			if (m_matrix[whiteY - 1][whiteX + 1] == 1 && m_matrix[whiteY - 2][whiteX + 2] == 0)
-			{
-				DoNextStep(window, 1, -1);
-			}
+		if (m_matrix[whiteY - 1][whiteX + 1] == 1 && m_matrix[whiteY - 2][whiteX + 2] == 0)
+		{
+			DoNextStep(window, 1, -1, text);
+		}
 	}
 	if (m_matrix[whiteY + 1][whiteX + 1] != WALL)
 	{
 		if (m_matrix[whiteY + 1][whiteX + 1] == 1 && m_matrix[whiteY + 2][whiteX + 2] == 0)
 		{
-			DoNextStep(window, 1, 1);
+			DoNextStep(window, 1, 1, text);
 		}
 	}
 	if (m_matrix[whiteY + 1][whiteX - 1] != WALL)
 	{
 		if (m_matrix[whiteY + 1][whiteX - 1] == 1 && m_matrix[whiteY + 2][whiteX - 2] == 0)
 		{
-			DoNextStep(window, -1, 1);
+			DoNextStep(window, -1, 1, text);
 		}
 	}
 
@@ -149,7 +160,7 @@ void CCheckers::SearchMaxWay(sf::RenderWindow &window)
 	{
 		if (m_matrix[whiteY - 1][whiteX - 1] == 1 && m_matrix[whiteY - 2][whiteX - 2] == 0)
 		{
-			DoNextStep(window, -1, -1);
+			DoNextStep(window, -1, -1, text);
 		}
 	}
 }

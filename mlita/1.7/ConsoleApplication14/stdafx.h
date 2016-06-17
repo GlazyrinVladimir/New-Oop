@@ -1,3 +1,15 @@
+// stdafx.h : include file for standard system include files,
+// or project specific include files that are used frequently, but
+// are changed infrequently
+//
+
+#pragma once
+
+#include "targetver.h"
+
+#include <stdio.h>
+#include <tchar.h>
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
@@ -5,19 +17,13 @@
 #include <cassert>
 #include <cstdint>
 #include <winsock.h>
-#include <cstring>
 #include <stdio.h>
 #include <conio.h>
 #include <locale.h>
 #include <vector>
 #include <list>
 #include <SFML/Graphics.hpp>
-#include "checkers.h"
+#include <map>
 
-using namespace sf;
-using namespace std;
 
-int main()
-{
-	CCheckers("files/fon.png", "files/black.png", "files/white.png");
-}
+
