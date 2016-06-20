@@ -20,6 +20,9 @@ namespace
 {
 	const int & AssureCorrectNumber(const int & value, const string & argName = string())
 	{		
+		int *badAllocControl;
+		badAllocControl = new int[value];
+		delete[] badAllocControl;
 		if (value >= 14 && value <= 60)
 		{
 			return value;
@@ -32,7 +35,9 @@ namespace
 {
 	const std::string & AssureNotContainInvalidSymbols(const std::string & value, const string & argName = string())
 	{
-
+		string *badAllocControl;
+		badAllocControl = new string[value.size()];
+		delete[] badAllocControl;
 		if (value.empty())
 		{
 			if (argName != "patronymic")

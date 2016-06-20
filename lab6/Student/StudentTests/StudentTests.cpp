@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "../Student/Student.h"
-
+#include <limits>
 using namespace std;
 
 template <typename Ex, typename Fn>
@@ -65,6 +65,12 @@ BOOST_AUTO_TEST_SUITE(Student_Tests)
 		BOOST_CHECK_EQUAL(student.GetAge(), 60);
 		BOOST_CHECK_THROW(student.SetAge(59), domain_error);
 		BOOST_CHECK_THROW(student.SetAge(61), out_of_range);	
+	}
+
+	BOOST_AUTO_TEST_CASE(can_find_bad_alloc)
+	{
+		BOOST_CHECK_THROW(CStudent student("Vladimir", "Glazyrin", "Evgenyevich", 10000000000000), bad_alloc);
+		BOOST_CHECK_THROW(CStudent student("VladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaVladimiraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Glazyrin", "Evgenyevich", 10000000000000), bad_alloc);
 	}
 
 	BOOST_AUTO_TEST_CASE(can_change_name_surname_patronymic)
