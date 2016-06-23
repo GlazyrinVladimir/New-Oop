@@ -8,7 +8,7 @@ class CLuckyTicketsCalculation
 {
 public:
 	bool GetTicketNumber(std::string const & name);
-	void GetMinNumberOfNextTickets();
+	void GetMinNumberOfNextTicket();
 	void OutputAnswer();
 	void DoCalculation();
 	std::vector<size_t> GetCount()const;

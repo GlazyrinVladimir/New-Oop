@@ -36,9 +36,9 @@ int main()
 {
 	CLuckyTicketsCalculation ticket;
 
-	if (ticket.GetTicketNumber("test4.txt"))
+	if (ticket.GetTicketNumber("test6.txt"))
 	{
-		ticket.GetMinNumberOfNextTickets();
+		ticket.GetMinNumberOfNextTicket();
 		ticket.OutputAnswer();
 	}
 	else

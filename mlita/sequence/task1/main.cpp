@@ -15,6 +15,7 @@
 
 #include "stdafx.h"
 #include "Sequence.h"
+#include <ctime>  
 
 using namespace std;
 
@@ -31,7 +32,7 @@ int main()
 	{
 		cout << "error input file";
 	}
-
+	cout << "runtime = " << clock() / 1000.0 << endl;
 	return 0;
 }
 
