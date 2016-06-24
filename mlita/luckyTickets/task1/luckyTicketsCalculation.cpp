@@ -3,7 +3,7 @@
 
 using namespace std;
 
-bool CLuckyTicketsCalculation::GetTicketNumber(std::string const & name)
+bool CLuckyTicketsCalculation::ReadTicketNumber(std::string const & name)
 {
 	ifstream inputFile(name);
 	if (inputFile.is_open())
@@ -24,7 +24,7 @@ bool CLuckyTicketsCalculation::GetTicketNumber(std::string const & name)
 		}
 		return true;
 	}
-	else return false;
+	return false;
 }
 
 size_t CLuckyTicketsCalculation::HalfCalculation(size_t const & start, size_t const & finish)
@@ -106,7 +106,7 @@ void CLuckyTicketsCalculation::DoCalculation()
 	}
 }
 
-void CLuckyTicketsCalculation::GetMinNumberOfNextTicket()
+void CLuckyTicketsCalculation::ReceiveMinNumberOfNextTicket()
 {
 	m_position = m_ticket.size() - 1;
 	size_t leftHalf = HalfCalculation(0, m_ticketHalfLength);

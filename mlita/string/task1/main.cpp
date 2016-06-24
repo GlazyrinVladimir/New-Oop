@@ -30,7 +30,7 @@ using namespace std;
 int _tmain()
 {
 	CSuprefixCheck suprefix;
-	if (suprefix.GetWordsAndSuprefix("tests3.txt"))
+	if (suprefix.ReadWordsAndSuprefix("test6.txt"))
 	{
 		suprefix.CountNumberOfSuprefixWords();
 		suprefix.WriteNumberOfSuprefix();

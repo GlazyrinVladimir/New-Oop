@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void CSuprefixCheck::GetWordsFromFile(ifstream & inputFile)
+void CSuprefixCheck::ReadWordsFromFile(ifstream & inputFile)
 {
 	string storage;
 	for (size_t i = 0; i < m_numberOfWords; i++)
@@ -14,7 +14,7 @@ void CSuprefixCheck::GetWordsFromFile(ifstream & inputFile)
 	std::sort(m_words.begin(), m_words.end());
 }
 
-void CSuprefixCheck::GetSuprefixFromFile(std::ifstream & inputFile, size_t & count)
+void CSuprefixCheck::ReadSuprefixFromFile(std::ifstream & inputFile, size_t & count)
 {
 	string storage;
 	while (!inputFile.eof())
@@ -26,7 +26,7 @@ void CSuprefixCheck::GetSuprefixFromFile(std::ifstream & inputFile, size_t & cou
 	}
 }
 
-bool CSuprefixCheck::GetWordsAndSuprefix(string const & fileName)
+bool CSuprefixCheck::ReadWordsAndSuprefix(string const & fileName)
 {
 	// Remove this stream, use normal error check mechanicss
 	ifstream inputFile(fileName);
@@ -37,13 +37,13 @@ bool CSuprefixCheck::GetWordsAndSuprefix(string const & fileName)
 	if (atoi(storage.c_str()))
 	{
 		m_numberOfWords = stoi(storage);
-		GetWordsFromFile(inputFile);
+		ReadWordsFromFile(inputFile);
 		getline(inputFile, storage);
 		if (atoi(storage.c_str()))
 		{
 			m_numberOfSuprefix = stoi(storage);
 
-			GetSuprefixFromFile(inputFile, count);
+			ReadSuprefixFromFile(inputFile, count);
 
 			if (count != m_numberOfSuprefix)
 			{				
@@ -57,21 +57,6 @@ bool CSuprefixCheck::GetWordsAndSuprefix(string const & fileName)
 		}
 	}
 	return false;
-}
-
-std::vector<size_t> CSuprefixCheck::GetCountOfSuprefix() const
-{
-	return m_countOfSuprefixInWords;
-}
-
-std::vector<std::string> CSuprefixCheck::GetWords() const
-{
-	return m_words;
-}
-
-std::vector<std::string> CSuprefixCheck::GetSuprefix() const
-{
-	return m_suprefixWords;
 }
 
 void CSuprefixCheck::CountNumberOfSuprefixWords()
@@ -117,4 +102,19 @@ void CSuprefixCheck::WriteNumberOfSuprefix()
 	{
 		outputFile << m_countOfSuprefixInWords[i] << endl;
 	}
+}
+
+std::vector<size_t> CSuprefixCheck::GetCountOfSuprefix() const
+{
+	return m_countOfSuprefixInWords;
+}
+
+std::vector<std::string> CSuprefixCheck::GetWords() const
+{
+	return m_words;
+}
+
+std::vector<std::string> CSuprefixCheck::GetSuprefix() const
+{
+	return m_suprefixWords;
 }

@@ -38,7 +38,7 @@ int main()
 
 	if (ticket.GetTicketNumber("test6.txt"))
 	{
-		ticket.GetMinNumberOfNextTicket();
+		ticket.ReceiveMinNumberOfNextTicket();
 		ticket.OutputAnswer();
 	}
 	else
