@@ -4,19 +4,27 @@
 CHttpUrl::CHttpUrl(std::string const & url)
 	: m_url(url)
 {
-	boost::regex xRegEx("(https?)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)");
-	boost::cmatch xResults;
-	if (boost::regex_match(url.c_str(), xResults, xRegEx))
+	/*try
+	{*/
+		boost::regex xRegEx("(https?)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)");
+		boost::cmatch xResults;
+		if (boost::regex_match(url.c_str(), xResults, xRegEx))
+		{
+			SetProtocol(boost::lexical_cast<std::string>(xResults[1]));
+			SetDomain(boost::lexical_cast<std::string>(xResults[2]));
+			SetPort(boost::lexical_cast<std::string>(xResults[3]));
+			SetDocument(boost::lexical_cast<std::string>(xResults[4]));
+		}
+		else
+		{
+			throw CUrlParsingError("incorrect_url");
+		}
+	/*}
+	catch (CUrlParsingError &e)
 	{
-		SetProtocol(boost::lexical_cast<std::string>(xResults[1]));
-		SetDomain(boost::lexical_cast<std::string>(xResults[2]));	
-		SetPort(boost::lexical_cast<std::string>(xResults[3]));
-		SetDocument(boost::lexical_cast<std::string>(xResults[4]));
-	}
-	else
-	{
-		throw CUrlParsingError("incorrect_url");
-	}
+		std::cout << e.what() << std::endl;
+	}*/
+	
 }
 
 CHttpUrl::CHttpUrl(std::string const & domain, std::string const & document, Protocol const & protocol, unsigned short port)
