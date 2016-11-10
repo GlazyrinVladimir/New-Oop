@@ -1,6 +1,5 @@
-// FindMaxExTests.cpp: определяет точку входа для консольного приложения.
+// bodies_tests.cpp : Defines the entry point for the console application.
 //
-
 
 #include "stdafx.h"
 #include <boost/algorithm/string/replace.hpp>
@@ -12,7 +11,7 @@ using boost::unit_test::test_unit_type;
 
 /*
 Данный класс управляет формаитрованием журнала запуска тестов
-Для того, чтобы увидеть результат, приложение должно быть запущено с ключём --log_level=test_suite (см. Post-build event в настройках проекта)
+Для того, чтобы увидеть результат, приложение должно быть запущено с ключём --log-level=test_suite (см. Post-build event в настройках проекта)
 */
 class SpecLogFormatter :
 	public boost::unit_test::output::compiler_log_formatter
@@ -26,7 +25,7 @@ class SpecLogFormatter :
 		m_indent += 2;
 	}
 
-
+	
 
 	virtual void test_unit_finish(ostream & /*os*/, boost::unit_test::test_unit const& /*tu*/, unsigned long /*elapsed*/) override
 	{
