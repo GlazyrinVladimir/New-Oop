@@ -24,7 +24,7 @@
     <ClInclude Include="targetver.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="ArraySum.h">
+    <ClInclude Include="FindMaxEx.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
