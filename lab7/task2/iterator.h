@@ -39,7 +39,7 @@ public:
 		return{ m_itemPtr++ };
 	}
 
-	CMyIterator operator --(int)//ïîñòôèêñíûé äèíêðåìåíò
+	CMyIterator operator --(int)
 	{
 		if (isReverse)
 		{

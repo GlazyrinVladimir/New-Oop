@@ -59,7 +59,7 @@ public:
 			}
 			catch (...)
 			{
-				DeleteItems(newBegin, newEnd);//если выбросится исключение, raw dealloc не вызовется DONE
+				DeleteItems(newBegin, newEnd);
 				throw;
 			}
 		}
@@ -74,19 +74,11 @@ public:
 		}
 		else if ((newSize > GetSize()) && (newSize <= GetCapacity()))
 		{
-			//try
-			//{
 			for (size_t i = 0; i < newSize - GetSize(); i++)
 			{
 				new (m_end)T();
 				++m_end;
 			}
-			//}
-			//catch (...)
-			//{
-			//	DestroyItems(m_begin + newSize, m_end); //// m_end
-			//	throw;
-			//}
 		}
 		else if (newSize > GetSize() && newSize > GetCapacity())
 		{
@@ -111,7 +103,7 @@ public:
 
 	void Append(const T & value)
 	{
-		if (m_end == m_endOfCapacity) // no free space
+		if (m_end == m_endOfCapacity)
 		{
 			size_t newCapacity = std::max(1u, GetCapacity() * 2);
 
@@ -167,7 +159,7 @@ public:
 
 	void Clear()
 	{
-		DestroyItems(m_begin, m_end);//просто удалить элементы, не удаляя "ведро" DONE
+		DestroyItems(m_begin, m_end);
 		m_end = m_begin;
 	}
 
@@ -187,7 +179,7 @@ public:
 			throw out_of_range("Index out of range");
 		}
 		return *(m_begin + index);
-	} //нет константной версии оператора DONE
+	}
 
 	CMyArray<T> & operator=(CMyArray<T> && arr)
 	{
@@ -266,12 +258,10 @@ private:
 		RawDealloc(begin);
 	}
 
-	// Копирует элементы из текущего вектора в to, возвращает newEnd
 	static void CopyItems(const T *srcBegin, T *srcEnd, T * const dstBegin, T * & dstEnd)
 	{
 		for (dstEnd = dstBegin; srcBegin != srcEnd; ++srcBegin, ++dstEnd)
 		{
-			// Construct "T" at "dstEnd" as a copy of "*begin"
 			new (dstEnd)T(*srcBegin);
 		}
 	}
