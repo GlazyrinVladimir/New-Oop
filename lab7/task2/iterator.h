@@ -10,6 +10,7 @@ public:
 		:m_itemPtr(it.m_itemPtr)
 	{
 	}
+
 	CMyIterator(T * itemPtr)
 		:m_itemPtr(itemPtr)
 	{
@@ -60,6 +61,18 @@ public:
 			return{ m_itemPtr-- };
 		}
 		return{ m_itemPtr++ };
+	}
+
+	CMyIterator & operator+=(ptrdiff_t numb)
+	{
+		m_itemPtr += (isReverse ? numb * (-1) : numb);
+		return *this;
+	}
+
+	CMyIterator & operator-=(ptrdiff_t numb)
+	{
+		m_itemPtr -= (isReverse ? numb * (-1) : numb);
+		return *this;
 	}
 
 	CMyIterator & operator --()

@@ -10,21 +10,7 @@ public:
 
 	CMyArray(const CMyArray& arr)
 	{
-		const auto size = arr.GetSize();
-		if (size != 0)
-		{
-			m_begin = RawAlloc(size);
-			try
-			{
-				CopyItems(arr.m_begin, arr.m_end, m_begin, m_end);
-				m_endOfCapacity = m_end;
-			}
-			catch (...)
-			{
-				DeleteItems(m_begin, m_end);
-				throw;
-			}
-		}
+		CopyConstructor(arr);
 	}
 
 	CMyArray(CMyArray && arr) //конструктор перемещения
@@ -63,41 +49,87 @@ public:
 				throw;
 			}
 		}
+		else
+		{
+			DeleteItems(m_begin, m_end);
+			m_begin = m_end = m_endOfCapacity = nullptr;
+		}
+	}
+
+	void CopyConstructor(const CMyArray & arr)
+	{
+		const auto size = arr.GetSize();
+		if (size != 0)
+		{
+			DeleteItems(m_begin, m_end);
+			m_begin = RawAlloc(size);
+			try
+			{
+				CopyItems(arr.m_begin, arr.m_end, m_begin, m_end);
+				m_endOfCapacity = m_end;
+			}
+			catch (...)
+			{
+				DeleteItems(m_begin, m_end);
+				throw;
+			}
+		}
+		else
+		{
+			DeleteItems(m_begin, m_end);
+			m_begin = m_end = m_endOfCapacity = nullptr;
+		}
 	}
 
 	void Resize(size_t newSize)
 	{
-		if (newSize <= GetSize())
+		try
 		{
-			DestroyItems(m_begin + newSize, m_end);
-			m_end -= (GetSize() - newSize);
-		}
-		else if ((newSize > GetSize()) && (newSize <= GetCapacity()))
-		{
-			for (size_t i = 0; i < newSize - GetSize(); i++)
+			if (newSize < GetSize())
 			{
-				new (m_end)T();
-				++m_end;
+				m_end -= (GetSize() - newSize);
 			}
-		}
-		else if (newSize > GetSize() && newSize > GetCapacity())
-		{
-			auto newBegin = RawAlloc(newSize);
-			T *newEnd = newBegin;
-			try
-			{
-				CopyItems(m_begin, m_end, newBegin, newEnd);
-			}
-			catch (...)
-			{
-				DeleteItems(newBegin, newEnd);
-				throw;
-			}
-			DeleteItems(m_begin, m_end);
+			else
+				if (newSize >= GetCapacity())
+				{
+					size_t oldSize = GetSize();
+					size_t newCapacity = std::max(1u, newSize * 2);
 
-			m_begin = newBegin;
-			m_end = newEnd;
-			m_endOfCapacity = m_begin + newSize;
+					auto newBegin = RawAlloc(newCapacity);
+					T *newEnd = newBegin;
+					try
+					{
+						CopyItems(m_begin, m_end, newBegin, newEnd);
+						for (size_t i = 0; i < newSize - oldSize; i++)
+						{
+							new (newEnd)T();
+							++newEnd;
+						}
+					}
+					catch (...)
+					{
+						DeleteItems(newBegin, newEnd);
+						throw;
+					}
+					DeleteItems(m_begin, m_end);
+					m_begin = newBegin;
+					m_end = newEnd;
+					m_endOfCapacity = m_begin + newCapacity;
+				}
+				else
+				{
+					size_t oldSize = GetSize();
+					for (size_t i = 0; i < newSize - oldSize; i++)
+					{
+						new (m_end)T();
+						++m_end;
+					}
+
+				}
+		}
+		catch (...)
+		{
+			m_end += newSize - GetSize();
 		}
 	}
 
@@ -122,7 +154,6 @@ public:
 				throw;
 			}
 			DeleteItems(m_begin, m_end);
-
 			// Переключаемся на использование нового хранилища элементов
 			m_begin = newBegin;
 			m_end = newEnd;
@@ -196,33 +227,16 @@ public:
 		return *this;
 	}
 
+	bool empty() const
+	{
+		return m_begin == m_end ? true : false;
+	}
+
 	CMyArray<T> & operator=(const CMyArray<T> & arr)
 	{
 		if (std::addressof(*this) != std::addressof(arr))
 		{
-			const auto size = arr.GetSize();
-			if (size != 0)
-			{
-				CMyArray<T> subArr(*this);
-
-
-				DeleteItems(m_begin, m_end);
-				m_begin = m_end = m_endOfCapacity = nullptr;
-
-				m_begin = RawAlloc(size);
-				try
-				{
-					CopyItems(arr.m_begin, arr.m_end, m_begin, m_end);
-					m_endOfCapacity = m_end;
-				}
-				catch (...)
-				{
-					DestroyItems(m_begin, m_end);
-					m_end = m_begin;
-					CopyItems(subArr.m_begin, subArr.m_end, m_begin, m_end);
-					throw;
-				}
-			}
+			CopyConstructor(arr);
 		}
 		return *this;
 	}
