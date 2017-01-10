@@ -33,9 +33,8 @@ BOOST_AUTO_TEST_CASE(can_find_the_max_length_of_a_string_in_a_vector_of_strings)
 		return first.length() < second.length(); }));
 	BOOST_CHECK_EQUAL(maxLenghtStr, "parallelepiped");
 }
-BOOST_AUTO_TEST_CASE(can_find_athlete_with_biggest_weigth)
-{
-	
+BOOST_AUTO_TEST_CASE(can_find_athlete_with_the_smallest_weigth)
+{	
 	vector<Athlete> athletes;
 	string inputStr = "Andrey Andreev A 50 100";
 	athletes.push_back(SetAthlete(inputStr));
@@ -45,20 +44,22 @@ BOOST_AUTO_TEST_CASE(can_find_athlete_with_biggest_weigth)
 	athletes.push_back(SetAthlete(inputStr));
 	inputStr = "Nitita Andreev D 130 50";
 	athletes.push_back(SetAthlete(inputStr));
-	Athlete athleteWithMaxWeight;
-	BOOST_CHECK(FindMax(athletes, athleteWithMaxWeight, [](Athlete const & first, Athlete const & second) {
-		return first.weight < second.weight;
+	Athlete athleteWithSmallestWeight;
+	BOOST_CHECK(FindMax(athletes, athleteWithSmallestWeight, [](Athlete const & first, Athlete const & second) {
+		return first.weight > second.weight;
 	}));
-	BOOST_CHECK_EQUAL(athleteWithMaxWeight.name+ athleteWithMaxWeight.middleName + athleteWithMaxWeight.surname, "NititaAndreevD");
-	BOOST_CHECK_EQUAL(athleteWithMaxWeight.weight, 130);
-	BOOST_CHECK_EQUAL(athleteWithMaxWeight.growth, 50);
+	BOOST_CHECK_EQUAL(athleteWithSmallestWeight.name+ athleteWithSmallestWeight.middleName + athleteWithSmallestWeight.surname, "VladimirAndreevC");
+	BOOST_CHECK_EQUAL(athleteWithSmallestWeight.weight, 40);
+	BOOST_CHECK_EQUAL(athleteWithSmallestWeight.growth, 140);
 
 }
 BOOST_AUTO_TEST_CASE(can_replace_the_existing_max_value)
 {
 	float maxFloat = 555.f;
 	vector<float> arr = { 54.3f, 548.f, -78.f, 98.f };
-	BOOST_CHECK(FindMax(arr, maxFloat));
+	BOOST_CHECK(FindMax(arr, maxFloat, [](float const & first, float const & second) {
+		return first < second;
+	}));
 	BOOST_CHECK_EQUAL(maxFloat, 548.f);
 }
 BOOST_AUTO_TEST_SUITE_END()

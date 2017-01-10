@@ -9,9 +9,11 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <sstream>      // std::istringstream
 #include <string>
-#include <boost/regex.hpp>
 #include <iostream>
-#include <boost/lexical_cast.hpp>
+#include <vector>
 #include <locale>
+#include <functional>
+
 
