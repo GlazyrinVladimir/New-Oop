@@ -22,15 +22,16 @@ Athlete SetAthlete(std::string const & str)
 	return athlete;
 }
 
-template<typename T, typename Less>
-bool FindMax(std::vector<T>const & arr, T & maxValue, Less const &less)
+template <typename T, typename Less = std::less<T> >
+bool FindMax(const std::vector<T> &arr, T& maxValue, const Less &less = Less())
 {
 	if (arr.empty())
 	{
 		return false;
 	}
+
 	auto max = arr.begin();
-	for (auto it = arr.begin(); it != arr.end(); it++)
+	for (auto it = arr.begin() + 1; it != arr.end(); it++)
 	{
 		if (less(*max, *it))
 		{
@@ -38,6 +39,5 @@ bool FindMax(std::vector<T>const & arr, T & maxValue, Less const &less)
 		}
 	}
 	maxValue = *max;
-
 	return true;
-}
+};
