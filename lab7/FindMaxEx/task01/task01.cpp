@@ -3,7 +3,7 @@
 	
 #include "stdafx.h"
 #include "FindMaxEx.h"
-
+#include <string>
 using namespace std;
 
 void PrintExampleInput()
@@ -23,31 +23,6 @@ void PrintInfoAboutAthlete(Athlete const & athlete)
 
 int main()
 {
-	PrintExampleInput();
-	vector<Athlete> athletes;
-	string inputStr;
-
-	while (getline(cin, inputStr) && inputStr != "0")
-	{
-		athletes.push_back(SetAthlete(inputStr));
-	}
-
-	Athlete athleteWithMaxWeight;
-
-	if (FindMax(athletes, athleteWithMaxWeight, [](Athlete const & first, Athlete const & second) {
-		return first.weight < second.weight;
-	}))
-	{
-		PrintInfoAboutAthlete(athleteWithMaxWeight);
-	}
-
-	Athlete athleteWithMaxGrowth;
-	if (FindMax(athletes, athleteWithMaxGrowth, [](Athlete const & first, Athlete const & second) {
-		return first.growth < second.growth;
-	}))
-	{
-		PrintInfoAboutAthlete(athleteWithMaxGrowth);
-	}
 	return 0;
 }
 

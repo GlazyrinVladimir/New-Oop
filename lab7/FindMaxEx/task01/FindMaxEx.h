@@ -29,15 +29,15 @@ bool FindMax(std::vector<T>const & arr, T & maxValue, Less const &less)
 	{
 		return false;
 	}
-	size_t maxValueIndex = 0;
-	for (size_t i = 1u; i < arr.size(); ++i)
+	auto max = arr.begin();
+	for (auto it = arr.begin(); it != arr.end(); it++)
 	{
-		if (less(arr[maxValueIndex], arr[i]))
+		if (less(*max, *it))
 		{
-			maxValueIndex = i;
+			max = it;
 		}
 	}
-	maxValue = arr[maxValueIndex];
+	maxValue = *max;
 
 	return true;
 }
