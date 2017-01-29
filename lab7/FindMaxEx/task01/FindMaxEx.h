@@ -10,7 +10,7 @@ struct Athlete
 	double growth;
 };
  
-Athlete SetAthlete(std::string const & str)
+Athlete CreateAthlete(std::string const & str)
 {
 	std::istringstream strm(str);
 	Athlete athlete;
@@ -38,6 +38,7 @@ bool FindMax(const std::vector<T> &arr, T& maxValue, const Less &less = Less())
 			max = it;
 		}
 	}
+	
 	maxValue = *max;
 	return true;
 };
